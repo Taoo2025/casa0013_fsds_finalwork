@@ -132,10 +132,10 @@ ax.set_xlim([0,500]);
 # Briefing
 ## Executive Summary
 
-**Main takeaway:**  
+**Main takeaway**  
 （1–2 句话，总结：Airbnb 在伦敦是否“失控”，以及是否需要监管）
 
-**Key findings:**  
+**Key findings**  
 - Airbnb 活动在伦敦呈现明显的空间不均衡分布，专业房东高度集中于……
 - 少数专业房东控制了不成比例数量的房源，显示出明显的商业化特征。
 - 若实施该提案，受影响的物业主要集中在……
@@ -161,7 +161,7 @@ Background 近期，市长社会流动性顾问因非法出租公有暂住房屋
 # Question
 ## Q1: Is Airbnb “out of control” in London?
 
-**Short answer:**  
+**Short answer**  
 （一句话交代：例如
 Airbnb activity in London is highly concentrated among a small subset of hosts, particularly professional hosts operating entire-home listings.）
 
@@ -169,7 +169,7 @@ Airbnb activity in London is highly concentrated among a small subset of hosts, 
 - 列数据，简要阐述数据，是什么，数据为（number)，数据表示了什么。
 
 
-**Interpretation:**  
+**Interpretation**  
 详细阐述These patterns suggest that Airbnb activity in London is better understood
 as spatially concentrated rather than uniformly excessive.
 
@@ -184,7 +184,7 @@ df.head()
 
 ## Q2: How many professional landlords are there?
 
-**Short answer:**  
+**Short answer**  
 伦敦有5222个专业房东。
 
 **Evidence:**  
@@ -505,6 +505,7 @@ df.head()
 ## References
 把自己用到的文献都放进来，注意老师说的参考文献的方式！！！！
 '在 Quarto 中，您需要使用 BibTeX 和 Markdown格式进行引用。“硬编码”的引用将不被接受。'
+
 
 
 
