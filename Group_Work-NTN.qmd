@@ -141,39 +141,48 @@ ax.set_xlim([0,500]);
 - 若实施该提案，受影响的物业主要集中在……
 - 该政策在缓解住房压力方面具有潜在益处，但也可能带来……
 - 从社会流动性的角度看，该政策可被重新叙述为……
-（上面是ai写的，我们需要结合自己的结论写摘要）：要注意：不写方法不写代码不写“我们将分析”完全模仿 NYC 报告的摘要风格
+（上面是ai写的，我们需要结合自己的结论写摘要）：要注意：不写方法不写代码不写“我们将分析”完全模仿报告的摘要风格
 
-## Context and Policy Background
+## Background
 
 简要概述伦敦短期租赁当前的争议焦点。
 阐述反对党提出的政策建议及其引发争议的原因。
-之前写的背景：
+之前写的背景：#需要改
 Background 近期，市长社会流动性顾问因非法出租公有暂住房屋的丑闻，将伦敦住房短缺与财富不平等的尖锐矛盾推向公众视野。 反对党借机提出强硬提案，要求对短期租赁（Airbnb）的房东实施强制登记并提高市政税，声称要平衡被 Airbnb 破坏的租赁和酒店市场。
 
 本简报旨在评估这一政治驱动提案的经济合理性、社会公平性及对市长竞选的潜在政治影响。 现有分析表明，Airbnb 的商业化运营正在系统性地加剧伦敦的住房不平等问题。 造成这一现象的核心原因在于： 1.商业化挤占住房： 平台上职业房东和非法房源的存在，挤占了私人长租和酒店业的生存空间，从而损害了私人租房者的利益，并间接推高了区域房价。 2.加速区域财富不平等： 租金和房价上涨加剧了房主与非房主之间的财富差距。同时，房租压力使得低收入家庭向外伦敦迁移，加速了区域贫困的郊区化趋势。 3.社区旅游化： 商业运营引入了负面外部性（如噪音和滋扰），拉低了社区生活质量，导致社区走向“旅游化”。
 
 ## Analytical Framework and Data
 
-本简报基于伦敦地区爱彼迎内部数据，结合地理边界数据及社会经济指标进行分析。
 
-专业房东被定义为管理多个房源的房东，此类行为反映的是商业化而非临时性房屋共享活动。通过空间分析技术，本研究考察了房东聚集模式，并评估其与住房及社会指标之间的关联性。
-（上面是ai写的，我们得改）--用了什么数据/如何定义“专业房东”/方法是为了支持判断，不是展示技术
+这个所有人写完之后我来综合
 
-### Q1: Is Airbnb “out of control” in London?
+
+# Question
+## Q1: Is Airbnb “out of control” in London?
 
 **Short answer:**  
-（一句话判断：是 / 否 / 局部是）
+（一句话交代：例如
+Airbnb activity in London is highly concentrated among a small subset of hosts, particularly professional hosts operating entire-home listings.）
 
 **Evidence:**  
-- Airbnb 房源与专业房东的空间分布特征
-- 高密度区域的地图或统计结果
-- “out of control” 的操作性定义
+- 列数据，简要阐述数据，是什么，数据为（number)，数据表示了什么。
+
 
 **Interpretation:**  
-These patterns suggest that Airbnb activity in London is better understood
+详细阐述These patterns suggest that Airbnb activity in London is better understood
 as spatially concentrated rather than uniformly excessive.
 
-### Q2: How many professional landlords are there?
+```{python}
+# 这里才写 Python
+import pandas as pd
+import geopandas as gpd
+
+df = pd.read_csv("data/listings.csv")
+df.head()
+```
+
+## Q2: How many professional landlords are there?
 
 **Short answer:**  
 伦敦有5222个专业房东。
@@ -184,7 +193,7 @@ as spatially concentrated rather than uniformly excessive.
 - 专业房东在所有房东中占比为9.4%
 
 **Interpretation:**  
-- 本报告对专业房东的定义为：名下有大于或等于2整套房源的房东。
+本报告对专业房东的定义为：名下有大于或等于2整套房源的房东。
 Following the Airbnb literature, professional hosts are commonly defined as hosts operating multiple listings (e.g. more than one property), reflecting a shift from casual home-sharing towards commercial provision (Sainaghi & Baggio 2021:2). Building on this definition, this study adopts a more conservative operationalisation by restricting professional hosts to those managing at least two entire-home listings. This refinement is particularly relevant to the housing inequality context, as entire-home listings imply a full withdrawal of dwellings from residential use and are therefore more directly associated with pressures on the long-term housing market.The ≥2 entire-home threshold represents a conservative extension of the multi-listing definition used in the literature, tailored to the housing market and policy context of London.
 - 为何根据内外城分组
 Distinguishing between Inner and Outer London provides a necessary spatial framework for assessing the impacts of professional Airbnb hosting. Previous studies have demonstrated that housing pressures and wealth inequalities in London are structurally organised along this divide (Centre for London, 2016), while urban theory suggests that intensive commercial activities tend to concentrate within highly connected urban cores (Arcaute et al., 2016). Professional hosts, as carriers of commercialised housing provision, are not a homogeneous group (Sainaghi & Baggio). The KDE and MSOA-level analyses presented here further reveal a pronounced concentration of professional hosts in Inner London, whereas their presence in Outer London is comparatively sparse. This spatial asymmetry indicates that the disruptive effects of Airbnb are likely to be unevenly distributed across the city. Consequently, policy proposals that apply uniform registration and taxation measures without accounting for inner–outer differences risk both economic inefficiency and unintended social inequity.
@@ -394,20 +403,18 @@ host_level.groupby("host_group")[[
 
 ```
 
-
-### Q3: How many properties would be affected by the proposal?
+## Q3: How many properties would be affected by the proposal?
 
 **Short answer:**  
 （一句话说明影响规模）
 
 **Evidence:**  
-- 符合政策限制条件的房源数量
-- 空间分布特征
-- 所做的关键假设
+- 数据1
+- 数据2
+- 数据3
 
 **Interpretation:**  
-The proposal would disproportionately affect centrally located and
-professionally managed listings.
+
 
 ```{python}
 # 这里才写 Python
@@ -418,43 +425,86 @@ df = pd.read_csv("data/listings.csv")
 df.head()
 ```
 
-### Q4: What are the likely pros and cons of the proposal?
+## Q4: What are the likely pros and cons of the proposal?
 
+### Implications for the Mayor
 **Potential benefits:**  
-- 缓解住房供给压力
-- 减少高密度旅游区的社区干扰
+- 
+-
 
 **Potential drawbacks:**  
-- 对部分小规模房东收入的影响
-- 执行与监管成本
+- 
+- 
 
-### Q5: Can the story be reframed positively in terms of social mobility?
+### Implications for Residents
+**Potential benefits:**  
+- 
+-
 
+**Potential drawbacks:**  
+- 
+- 
+
+### Implications for the City
+**Potential benefits:**  
+- 
+-
+
+**Potential drawbacks:**  
+- 
+- 
+
+### Spatial Evidence: High Leverage vs Uneven Costs
+**Key Spatial Patterns** 
+
+**Interpretation** 
+
+```{python}
+# 这里才写 Python
+import pandas as pd
+import geopandas as gpd
+
+df = pd.read_csv("data/listings.csv")
+df.head()
+```
+## Q5: Can the story be reframed positively in terms of social mobility?
+（我觉得这一问的内容结构取决于写这个的同学）
 **Short answer:**  
-（是 / 有条件地是）
+（一句话总结）
 
 **Evidence and framing:**  
-- Airbnb 商业化对弱势社区的潜在影响
-- 政策如何被表述为保护长期居住权
-- 对社会流动性的正面叙事路径
+- 1
+- 2
+- 3
+**Interpretation** 
+Policy Implications and Recommendations
 
-## Policy Implications and Recommendations
 
-Based on the evidence presented, this briefing recommends:
-- Targeted, spatially differentiated regulation rather than blanket bans
-- Enhanced monitoring of professional landlords
-- Alignment of short-term rental regulation with broader housing policy
-（我觉得这一问可以揉进Q5）
 
-## Limitations and Assumptions
+```{python}
+# 这里才写 Python
+import pandas as pd
+import geopandas as gpd
 
-This analysis relies on scraped platform data and operational definitions
-of professional landlords, which may under- or over-estimate true levels
-of commercial activity. Spatial patterns should therefore be interpreted
-as indicative rather than definitive.（ai写的，我们需要改）
+df = pd.read_csv("data/listings.csv")
+df.head()
+```
+
+## Overall Assessment
+
+## Transparency and Limitations
+（这些是Q2/4的，自己加自己负责的部分的Transparency and Limitations）
+- This analysis relies on scraped platform data and operational definitions of professional landlords, which may under- or over-estimate true levels of commercial activity. Spatial patterns should therefore be interpreted as indicative rather than definitive.
+- Operating nights are proxied using availability data.
+- The 90-day threshold is policy-relevant but imperfect.
+- Results describe relative patterns rather than causal effects.
 
 
 {{< include _questions.qmd >}}
 
 ## References
+把自己用到的文献都放进来，注意老师说的参考文献的方式！！！！
+'在 Quarto 中，您需要使用 BibTeX 和 Markdown格式进行引用。“硬编码”的引用将不被接受。'
+
+
 
