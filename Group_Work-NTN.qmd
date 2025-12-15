@@ -130,6 +130,329 @@ ax.set_xlim([0,500]);
 {{< pagebreak >}}
 
 # Briefing
+## Executive Summary
+
+**Main takeaway:**  
+（1–2 句话，总结：Airbnb 在伦敦是否“失控”，以及是否需要监管）
+
+**Key findings:**  
+- Airbnb 活动在伦敦呈现明显的空间不均衡分布，专业房东高度集中于……
+- 少数专业房东控制了不成比例数量的房源，显示出明显的商业化特征。
+- 若实施该提案，受影响的物业主要集中在……
+- 该政策在缓解住房压力方面具有潜在益处，但也可能带来……
+- 从社会流动性的角度看，该政策可被重新叙述为……
+（上面是ai写的，我们需要结合自己的结论写摘要）：要注意：不写方法不写代码不写“我们将分析”完全模仿 NYC 报告的摘要风格
+
+## Context and Policy Background
+
+简要概述伦敦短期租赁当前的争议焦点。
+阐述反对党提出的政策建议及其引发争议的原因。
+之前写的背景：
+Background 近期，市长社会流动性顾问因非法出租公有暂住房屋的丑闻，将伦敦住房短缺与财富不平等的尖锐矛盾推向公众视野。 反对党借机提出强硬提案，要求对短期租赁（Airbnb）的房东实施强制登记并提高市政税，声称要平衡被 Airbnb 破坏的租赁和酒店市场。
+
+本简报旨在评估这一政治驱动提案的经济合理性、社会公平性及对市长竞选的潜在政治影响。 现有分析表明，Airbnb 的商业化运营正在系统性地加剧伦敦的住房不平等问题。 造成这一现象的核心原因在于： 1.商业化挤占住房： 平台上职业房东和非法房源的存在，挤占了私人长租和酒店业的生存空间，从而损害了私人租房者的利益，并间接推高了区域房价。 2.加速区域财富不平等： 租金和房价上涨加剧了房主与非房主之间的财富差距。同时，房租压力使得低收入家庭向外伦敦迁移，加速了区域贫困的郊区化趋势。 3.社区旅游化： 商业运营引入了负面外部性（如噪音和滋扰），拉低了社区生活质量，导致社区走向“旅游化”。
+
+## Analytical Framework and Data
+
+本简报基于伦敦地区爱彼迎内部数据，结合地理边界数据及社会经济指标进行分析。
+
+专业房东被定义为管理多个房源的房东，此类行为反映的是商业化而非临时性房屋共享活动。通过空间分析技术，本研究考察了房东聚集模式，并评估其与住房及社会指标之间的关联性。
+（上面是ai写的，我们得改）--用了什么数据/如何定义“专业房东”/方法是为了支持判断，不是展示技术
+
+### Q1: Is Airbnb “out of control” in London?
+
+**Short answer:**  
+（一句话判断：是 / 否 / 局部是）
+
+**Evidence:**  
+- Airbnb 房源与专业房东的空间分布特征
+- 高密度区域的地图或统计结果
+- “out of control” 的操作性定义
+
+**Interpretation:**  
+These patterns suggest that Airbnb activity in London is better understood
+as spatially concentrated rather than uniformly excessive.
+
+### Q2: How many professional landlords are there?
+
+**Short answer:**  
+伦敦有5222个专业房东。
+
+**Evidence:**  
+- 伦敦一共有5222个专业房东
+- 内城区长租型专业房东个数为:3590,内城区短租型专业房东个数为:108,外城区长租型专业房东个数为:921,外城区短租型专业房东个数为:603,
+- 专业房东在所有房东中占比为9.4%
+
+**Interpretation:**  
+- 本报告对专业房东的定义为：名下有大于或等于2整套房源的房东。
+Following the Airbnb literature, professional hosts are commonly defined as hosts operating multiple listings (e.g. more than one property), reflecting a shift from casual home-sharing towards commercial provision (Sainaghi & Baggio 2021:2). Building on this definition, this study adopts a more conservative operationalisation by restricting professional hosts to those managing at least two entire-home listings. This refinement is particularly relevant to the housing inequality context, as entire-home listings imply a full withdrawal of dwellings from residential use and are therefore more directly associated with pressures on the long-term housing market.The ≥2 entire-home threshold represents a conservative extension of the multi-listing definition used in the literature, tailored to the housing market and policy context of London.
+- 为何根据内外城分组
+Distinguishing between Inner and Outer London provides a necessary spatial framework for assessing the impacts of professional Airbnb hosting. Previous studies have demonstrated that housing pressures and wealth inequalities in London are structurally organised along this divide (Centre for London, 2016), while urban theory suggests that intensive commercial activities tend to concentrate within highly connected urban cores (Arcaute et al., 2016). Professional hosts, as carriers of commercialised housing provision, are not a homogeneous group (Sainaghi & Baggio). The KDE and MSOA-level analyses presented here further reveal a pronounced concentration of professional hosts in Inner London, whereas their presence in Outer London is comparatively sparse. This spatial asymmetry indicates that the disruptive effects of Airbnb are likely to be unevenly distributed across the city. Consequently, policy proposals that apply uniform registration and taxation measures without accounting for inner–outer differences risk both economic inefficiency and unintended social inequity.
+- 内外城分组依据
+分组依据：根据文献‘特拉弗斯、托尼、萨姆·西姆斯和尼古拉斯·博塞蒂。2016 年。“ 伦敦的住房和不平等”。伦敦中心。https ://www.centreforlondon.org/wp-content/uploads/2016/08/CFLJ4292-London-Inequality-04_16_WEB_V4.pdf’，确定内城范围(Travers et al. 2016:17).
+Furthermore, based on an examination of the original data frame, 'the City of London' should also be added.
+Inner London is defined as a set of central boroughs, including the City of London, which constitutes the historic and functional core of London and is consistently classified as part of Inner London in official statistics.
+- 为何根据长短租分组
+Distinguishing between long-term and short-term rental orientations is essential for evaluating the housing impacts of Airbnb. Existing research suggests that housing inequality is primarily exacerbated when residential dwellings are persistently withdrawn from long-term use, rather than through short-term accommodation per se (Centre for London, 2016). Moreover, Airbnb studies indicate that commercialised activity is driven mainly by a subset of professional hosts (Sainaghi & Baggio). Drawing on the London regulatory context and housing-function logic, this study adopts a 90-day threshold to distinguish rental orientations: listings unavailable for short-term use for more than 90 days per year are considered short-term oriented, reflecting a functional shift away from residential use. KDE and MSOA-level analyses further reveal that such high-intensity short-term rentals are spatially concentrated in Inner London. This evidence suggests that Airbnb’s disruptive effects are unevenly distributed and underscores the need for differentiated policy responses rather than uniform regulation.
+#在评估 Airbnb 对住房不平等的影响时，有必要区分不同的租赁运营方式，而不能将所有平台房源视为同质。既有研究表明，真正加剧住房不平等的关键机制在于长期居住功能被商业化用途持续挤占，而非短期住宿本身（Centre for London, 2016）。同时，Airbnb 文献亦指出，平台上的商业化运营主要由一部分职业化房东推动，而非所有房东（Sainaghi & Baggio）。基于伦敦现有监管语境与住房功能逻辑，本文采用 90 天作为区分长租取向与短租取向的操作性阈值：当一套房源在一年中超过 90 天处于短期出租状态时，其功能已明显偏离长期住房用途。结合 KDE 与 MSOA 层级分析结果可以发现，高强度短租房源在内城呈现显著集聚，表明 Airbnb 对住房挤占与社区旅游化的影响并非均匀分布。因此，区分长短租不仅在方法论上合理，也为评估反对党“一刀切”登记与加税提案的经济效率与社会公平性提供了必要前提。
+- 为什么90天
+The 90-day threshold used to distinguish long-term from short-term rental orientations is derived from the London regulatory framework governing temporary sleeping accommodation rather than from a universally accepted academic definition. In this context, exceeding 90 days of short-term letting signals a functional shift away from residential use towards commercial accommodation. Adopting this policy-relevant operational boundary allows the empirical analysis to speak directly to ongoing political and regulatory debates.
+- 根据长短租进一步分组，但是不确定选择列'availability_365'还是列'"maximum_nights'`,因此先检查这两列的中位数与众数观察分布情况。
+The median availability of 189 days indicates that more than half of professional listings are unavailable for at least 176 days per year, suggesting a substantial degree of functional withdrawal from the housing market.
+By contrast, the median and modal maximum night setting of 365 indicates that most professional hosts impose no effective upper limit on booking duration, reflecting platform rule configuration rather than realised rental behaviour.
+Maximum night settings are used to identify the intended market role of professional hosts, distinguishing listings designed as long-term or quasi-hotel assets. Availability-based measures are subsequently employed to assess the intensity of commercial operation and its potential social externalities.
+参考文献最后整理到报告结尾，先放在这。
+- 参考文献：
+Sainaghi R, Baggio R. Are mom-and-pop and professional hosts actually competing against hotels?[J]. International Journal of Contemporary Hospitality Management, 2021, 33(3): 808-827.
+- Sainaghi, Ruggero, and Rodolfo Baggio. "Are mom-and-pop and professional hosts actually competing against hotels?." International Journal of Contemporary Hospitality Management 33.3 (2021): 808-827.
+- Sainaghi, R., & Baggio, R. (2021). Are mom-and-pop and professional hosts actually competing against hotels?. International Journal of Contemporary Hospitality Management, 33(3), 808-827.
+- Travers, Tony, Sam Sims, and Nicolas Bosetti. 2016. “Housing and Inequality in London.” Centre for London. https://www.centreforlondon.org/wp-content/uploads/2016/08/CFLJ4292-London-Inequality-04_16_WEB_V4.pdf.
+
+#This indicates a shift away from casual home-sharing towards commercial short-term rental operations.
+#还得再引申点东西。
+```{python}
+# 这里才写 Python
+import pandas as pd
+import numpy as np
+import geopandas as gpd
+import seaborn as sns
+import matplotlib.pyplot as plt
+df = pd.read_csv("https://github.com/Taoo2025/casa0013_fsds_finalwork/raw/refs/heads/main/data/listings.csv") 
+# Check the data content and format
+print(df.head())
+print(df.shape)
+
+# Unify the column names
+df.columns = df.columns.str.lower()
+key_columns = [
+    "id",
+    "host_id",
+    "room_type",
+    "availability_365",
+    "maximum_nights",
+    "neighbourhood_cleansed",
+    "latitude",
+    "longitude"
+]
+#备份数据以防污染原数据
+df_select = df[key_columns].copy()
+# numeric coercion
+df_select["availability_365"] = pd.to_numeric(
+    df_select["availability_365"],
+    errors="coerce"
+)
+
+df_select["maximum_nights"] = pd.to_numeric(
+    df_select["maximum_nights"],
+    errors="coerce"
+)
+# 选取需要的列
+df_clean = (
+    df_select
+    .dropna(subset=[
+        "availability_365",
+        "maximum_nights",
+        "host_id",
+        "room_type",
+        "neighbourhood_cleansed",
+        "latitude",
+        "longitude"
+    ])
+    .reset_index(drop=True)
+)
+# 检查清洗前后的dataframe
+print(df_clean.head())
+print("Before NA cleaning:", len(df_select))
+print("After NA cleaning:", len(df_clean))
+# 筛选房源
+## 1. 只保留整套房源
+df_entire = df_clean[df_clean["room_type"] == "Entire home/apt"].copy()
+print(df_entire.head())
+## 2. 统计每位房东的整套房数量
+host_entire_counts = (
+    df_entire
+    .groupby("host_id")
+    .size()
+    .reset_index(name="n_entire_homes")
+)
+
+## 3. 专业房东：≥2 套
+professional_hosts = host_entire_counts[
+    host_entire_counts["n_entire_homes"] >= 2
+]
+## 4. 回到 listing 层级
+df_professional = df_entire.merge(
+    professional_hosts[["host_id"]],
+    on="host_id",
+    how="inner"
+)
+#检查筛选房源的结果
+print(df_professional.head())
+#统计专业房东的总数。
+n_professional_hosts = professional_hosts.shape[0]
+print("Number of professional hosts:", n_professional_hosts)
+#定义内外城
+## 先检查原有数据如何命名伦敦各区
+df_professional["neighbourhood_cleansed"].unique()
+##分组
+inner_boroughs = [
+    "Camden",
+    "Hackney",
+    "Islington",
+    "Kensington and Chelsea",
+    "Lambeth",
+    "Southwark",
+    "Tower Hamlets",
+    "Westminster",
+    "Hammersmith and Fulham",
+    "Wandsworth",
+    "Lewisham",
+    "Haringey",
+    "Newham",
+    "City of London"
+]
+## 使用 np.where() 创建新列 inner_city
+df_professional["inner_city"] = np.where(
+    df_professional["neighbourhood_cleansed"].isin(inner_boroughs),
+    "Inner London",
+    "Outer London"
+)
+#定义长短租分组，界限为90天
+##不确定选择列'availability_365'还是列'"maximum_nights'作为租期参考`,因此先检查这两列的中位数与众数观察分布情况。
+median_availability = df_professional["availability_365"].median()
+mode_availability = df_professional["availability_365"].mode()
+median_min_nights = df_professional["maximum_nights"].median()
+mode_min_nights = df_professional["maximum_nights"].mode()
+print("Availability_365:")
+print("  Median:", median_availability)
+print("  Mode(s):", mode_availability.tolist())
+
+print("\nmaximum_nights:")
+print("  Median:", median_min_nights)
+print("  Mode(s):", mode_min_nights.tolist())
+
+#定义 rental_role
+df_professional["rental_role"] = np.where(
+    df_professional["maximum_nights"] > 90,
+    "Long-term oriented",
+    "Short-term oriented"
+)
+#计算 days_unavailable，常被视作实际运营强度（proxy for usage intensity）
+df_professional["days_unavailable"] = (
+    365 - df_professional["availability_365"]
+)
+#快速检查新列是否成功生成，确认数据看起来是否合理
+print(df_professional.head())
+
+#生成 dominant_location，用“房源数量的多数”来判定房东的主要空间活动区域。
+host_level["dominant_location"] = np.where(
+    host_level["share_inner_city"] >= 0.5,
+    "Inner London",
+    "Outer London"
+)
+#生成 dominant_rental_role，share_long_term_role表示该房东名下房源中被制度上判定为“长租取向”的比例
+host_level["dominant_rental_role"] = np.where(
+    host_level["share_long_term_role"] >= 0.5,
+    "Long-term oriented",
+    "Short-term oriented"
+)
+#“This classification reflects the dominant pattern rather than the full heterogeneity of individual portfolios.”
+
+#在 host_level（一行 = 一位专业房东）中新建一列 host_group，所有房东先统一标为 "Unclassified"
+host_level["host_group"] = "Unclassified"
+#用 loc + 条件，把房东分进四类
+host_level.loc[
+    (host_level["dominant_location"] == "Inner London") &
+    (host_level["dominant_rental_role"] == "Short-term oriented"),
+    "host_group"
+] = "Inner-city short-term professional hosts"
+
+host_level.loc[
+    (host_level["dominant_location"] == "Inner London") &
+    (host_level["dominant_rental_role"] == "Long-term oriented"),
+    "host_group"
+] = "Inner-city long-term professional hosts"
+
+host_level.loc[
+    (host_level["dominant_location"] == "Outer London") &
+    (host_level["dominant_rental_role"] == "Short-term oriented"),
+    "host_group"
+] = "Outer-city short-term professional hosts"
+
+host_level.loc[
+    (host_level["dominant_location"] == "Outer London") &
+    (host_level["dominant_rental_role"] == "Long-term oriented"),
+    "host_group"
+] = "Outer-city long-term professional hosts"
+#查看分组结果
+host_level["host_group"].value_counts()
+#查看“实际运营强度”的代理指标。
+host_level.groupby("host_group")[[
+    "median_days_unavailable",
+    "mean_days_unavailable"
+]].describe()
+
+```
+
+
+### Q3: How many properties would be affected by the proposal?
+
+**Short answer:**  
+（一句话说明影响规模）
+
+**Evidence:**  
+- 符合政策限制条件的房源数量
+- 空间分布特征
+- 所做的关键假设
+
+**Interpretation:**  
+The proposal would disproportionately affect centrally located and
+professionally managed listings.
+
+```{python}
+# 这里才写 Python
+import pandas as pd
+import geopandas as gpd
+
+df = pd.read_csv("data/listings.csv")
+df.head()
+```
+
+### Q4: What are the likely pros and cons of the proposal?
+
+**Potential benefits:**  
+- 缓解住房供给压力
+- 减少高密度旅游区的社区干扰
+
+**Potential drawbacks:**  
+- 对部分小规模房东收入的影响
+- 执行与监管成本
+
+### Q5: Can the story be reframed positively in terms of social mobility?
+
+**Short answer:**  
+（是 / 有条件地是）
+
+**Evidence and framing:**  
+- Airbnb 商业化对弱势社区的潜在影响
+- 政策如何被表述为保护长期居住权
+- 对社会流动性的正面叙事路径
+
+## Policy Implications and Recommendations
+
+Based on the evidence presented, this briefing recommends:
+- Targeted, spatially differentiated regulation rather than blanket bans
+- Enhanced monitoring of professional landlords
+- Alignment of short-term rental regulation with broader housing policy
+（我觉得这一问可以揉进Q5）
+
+## Limitations and Assumptions
+
+This analysis relies on scraped platform data and operational definitions
+of professional landlords, which may under- or over-estimate true levels
+of commercial activity. Spatial patterns should therefore be interpreted
+as indicative rather than definitive.（ai写的，我们需要改）
+
 
 {{< include _questions.qmd >}}
 
