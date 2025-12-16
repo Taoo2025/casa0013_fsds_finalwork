@@ -183,18 +183,12 @@ df.head()
 ```
 
 ## Q2: How many professional landlords are there?
+London has a total of 5,222 professional hosts, accounting for 9.4% of all Airbnb hosts.
+### Definition of Professional Host: 
+Refers to individuals operating two or more entire-home listings. This threshold is commonly used in Airbnb literature to distinguish sustained commercial activity from temporary home-sharing (@sainaghi2021mom). Adopting this specific definition aims to more accurately reflect the phenomenon of entire residences being withdrawn from residential use, thereby establishing a more direct link between this group and long-term housing market pressures.
+However, to reflect the heterogeneity within this group, professional landlords are further categorized by **spatial location (inner and outer London)** and **rental orientation (short-term and long-term)**. The inner versus outer London distinction is based on established research findings: London's housing pressures and wealth inequality exhibit a structural distribution along this boundary (@travers2016housing, p. 17), while dense commercial activity often concentrates in transit-oriented urban cores (@arcaute2016cities). Following this theoretical framework, the City of London is included within the inner core area.
 
-**Short answer:**  
-London has a relatively small number of professional landlords, totalling 5,222. These landlords play a significant role in shaping concerns about Airbnb being “out of control” in the city.
-
-**Evidence:**  
-
-- London has a total of **5,222 professional hosts**, accounting for **9.4% of all Airbnb hosts**.
-  Professional hosts are defined as those operating **two or more entire-home listings**, a conservative threshold commonly used in the Airbnb literature to capture sustained commercial activity rather than casual home-sharing (@sainaghi2021mom).
-
-![Share of Professional Hosts Among All Hosts](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/fddef7c18e555c3704d4330345c058536fb0d83b/Share%20of%20Professional%20Hosts%20Among%20All%20Hosts.png)
-
-
+### Distribution and Classification
 - Professional hosts are unevenly distributed across space and rental orientation:
   - **Inner-city long-term professional hosts:** 3,590  
   - **Inner-city short-term professional hosts:** 108  
@@ -204,16 +198,8 @@ London has a relatively small number of professional landlords, totalling 5,222.
 ![Composition of Professional Hosts by Location and Rental Orientation](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/fddef7c18e555c3704d4330345c058536fb0d83b/Composition%20of%20Professional%20Hosts%20by%20Location%20and%20Rental%20Orientation.png)
 **Definitions and Analytical Scope**
 
-Following the Airbnb literature, professional hosts are commonly defined as hosts operating multiple listings, reflecting a shift from casual home-sharing towards commercial provision (@sainaghi2021mom). Building on this approach, this study adopts a more conservative operational definition by restricting professional hosts to those managing **two or more entire-home listings**. This refinement is particularly relevant in the context of housing inequality, as entire-home listings imply a full withdrawal of dwellings from residential use and are therefore more directly associated with pressures on the long-term housing market.
-
-To account for heterogeneity within this group, professional hosts are further classified by **spatial location (Inner vs Outer London)** and **rental orientation (short-term vs long-term)**. The Inner–Outer London distinction follows established findings that housing pressure and wealth inequality in London are structurally organised along this divide (@travers2016housing, p. 17), and that intensive commercial activities tend to concentrate in highly connected urban cores (@arcaute2016cities). Consistent with this literature, the City of London is included as part of the inner-city core.
-
-Rental orientation is distinguished using a **90-day threshold**, derived from London’s short-term letting regulatory framework rather than a universal academic definition. This policy-relevant boundary allows listings that are persistently withdrawn from residential use to be distinguished from more occasional forms of short-term letting, aligning the empirical classification with ongoing political and regulatory debates.
-
-**Interpretation:**  
-The grouping results indicate that professional hosts do not constitute a homogeneous group. Their behaviour in the housing market varies markedly in terms of both operating intensity and spatial distribution. In numerical terms, professional hosts remain a minority of all Airbnb hosts; in terms of housing resource use and operating intensity, they have become one of the most influential groups on the platform.
-
-This suggests that debates over whether Airbnb is “out of control” should not be assessed solely on the basis of host counts, but should instead focus on how different types of professional hosts use housing. This finding provides essential context for evaluating the scope and potential impacts of the opposition’s proposal in the subsequent analysis.
+The grouping results confirm that professional hosts are not a homogeneous group, showing marked variation in operating intensity and spatial distribution. While they remain a minority in numerical terms, their intensive use of housing resources makes them one of the most influential groups on the platform.
+This suggests that debates over whether Airbnb is “out of control” should focus on how different types of professional hosts use housing, rather than solely relying on host counts. This finding provides essential context for evaluating regulatory proposals.
 
 #放到后面数据分析Q4去，The KDE and MSOA-level analyses presented here further reveal a pronounced concentration of professional hosts in Inner London, whereas their presence in Outer London is comparatively sparse. This spatial asymmetry indicates that the disruptive effects of Airbnb are likely to be unevenly distributed across the city. Consequently, policy proposals that apply uniform registration and taxation measures without accounting for inner–outer differences risk both economic inefficiency and unintended social inequity.
 
@@ -1210,6 +1196,7 @@ df.head()
   year         = {2024},
  url= {https://researchbriefings.files.parliament.uk/documents/CBP-8395/CBP-8395.pdf}}
 }
+
 
 
 
