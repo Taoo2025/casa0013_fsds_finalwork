@@ -626,7 +626,16 @@ Yes, Airbnb’s uneven and seemingly uncontrolled growth can be reframed as a me
 **Evidence and framing:**  
 
 - 1 Airbnb, a Contested Sharing Economy Platform, to a Governable Policy Object
-Airbnb is one of the most prominent platforms within the so-called “sharing economy,” using peer-to-peer digital technology to connect hosts and guests and, in doing so, creating a form of short-term rental that sits between traditional residential letting and hotel accommodation (@wachsmuth2018airbnb). While short-term rental platforms are often framed in public debate as drivers of housing shortages, inequality, and gentrification, the findings of this study—read alongside the existing literature—suggest a more nuanced interpretation. Rather than viewing Airbnb solely as a source of housing pressure, it can also be understood as a lens through which underlying market dynamics become visible, creating opportunities for more targeted and effective urban governance.
+Airbnb is one of the most prominent platforms within the so-called “sharing economy,” using peer-to-peer digital technology to connect hosts and guests and, in doing so, creating a form of short-term rental that sits between traditional residential letting and hotel accommodation (@article{wachsmuth2018airbnb,
+  title={Airbnb and the rent gap: Gentrification through the sharing economy},
+  author={Wachsmuth, David and Weisler, Alexander},
+  journal={Environment and planning A: economy and space},
+  volume={50},
+  number={6},
+  pages={1147--1170},
+  year={2018},
+  publisher={SAGE Publications Sage UK: London, England}
+}). While short-term rental platforms are often framed in public debate as drivers of housing shortages, inequality, and gentrification, the findings of this study—read alongside the existing literature—suggest a more nuanced interpretation. Rather than viewing Airbnb solely as a source of housing pressure, it can also be understood as a lens through which underlying market dynamics become visible, creating opportunities for more targeted and effective urban governance.
 
 
 - 2 Evidence of Spatial Heterogeneity
@@ -635,12 +644,40 @@ The evidence clearly shows that Airbnb’s impact on London’s housing market i
 
 - 3 From “Gentrification” in London to the “Visualisation of Inequality”
 In the London context, these spatial differences need to be understood against the city’s longer-term patterns of gentrification.
-London has long displayed a clear inner–outer city divide: inner-city areas concentrate high-value employment, cultural capital, and investment-led housing demand, while outer-city areas primarily serve residential and social reproduction functions. This structural imbalance creates conditions in which gentrification pressures are more likely to emerge and become spatially concentrated (@gyodi2024spatial). Without effective guidance, short-term rentals in high-demand inner-city areas can reinforce these existing dynamics, accelerating gentrification, further undermining housing affordability, and increasing the risk of community displacement.
+London has long displayed a clear inner–outer city divide: inner-city areas concentrate high-value employment, cultural capital, and investment-led housing demand, while outer-city areas primarily serve residential and social reproduction functions. This structural imbalance creates conditions in which gentrification pressures are more likely to emerge and become spatially concentrated（@article{gyodi2024spatial,
+  title={The spatial patterns of Airbnb offers, hotels and attractions: are professional hosts taking over cities?},
+  author={Gy{\'o}di, Krist{\'o}f},
+  journal={Current Issues in Tourism},
+  volume={27},
+  number={17},
+  pages={2757--2782},
+  year={2024},
+  publisher={Taylor \& Francis}
+}
+）. Without effective guidance, short-term rentals in high-demand inner-city areas can reinforce these existing dynamics, accelerating gentrification, further undermining housing affordability, and increasing the risk of community displacement.
 
 However, the spatial analysis in this study suggests that Airbnb does not shape this process in the same way across the city.
 Rather than operating uniformly, it brings the sharp differences in housing use between inner and outer London into clearer view. Mapping the spatial concentration of listings shows that housing commercialisation pressures are tightly clustered in inner-city neighbourhoods, while outer-city areas display a distinctly different pattern characterised by low-intensity, supplementary short-term renting. From this perspective, short-term rentals are not simply a “gentrification accelerator,” but also a means through which previously less visible spatial inequalities become more apparent.
 
-This pattern of spatial heterogeneity is consistent with findings in the existing literature. Previous research shows that Airbnb introduces a new and spatially uneven stream of potential rental income into housing markets, creating a “short-term rental rent gap” that is most pronounced in high-demand inner-city areas (@wachsmuth2018airbnb). At the same time, market-focused studies indicate that, under low-intensity conditions, short-term renting can serve as a way of making use of underutilised housing assets and strengthening household economic resilience (@barron2021effect). 
+This pattern of spatial heterogeneity is consistent with findings in the existing literature. Previous research shows that Airbnb introduces a new and spatially uneven stream of potential rental income into housing markets, creating a “short-term rental rent gap” that is most pronounced in high-demand inner-city areas (@article{wachsmuth2018airbnb,
+  title={Airbnb and the rent gap: Gentrification through the sharing economy},
+  author={Wachsmuth, David and Weisler, Alexander},
+  journal={Environment and planning A: economy and space},
+  volume={50},
+  number={6},
+  pages={1147--1170},
+  year={2018},
+  publisher={SAGE Publications Sage UK: London, England}
+}). At the same time, market-focused studies indicate that, under low-intensity conditions, short-term renting can serve as a way of making use of underutilised housing assets and strengthening household economic resilience (@article{barron2021effect,
+  title={The effect of home-sharing on house prices and rents: Evidence from Airbnb},
+  author={Barron, Kyle and Kung, Edward and Proserpio, Davide},
+  journal={Marketing Science},
+  volume={40},
+  number={1},
+  pages={23--47},
+  year={2021},
+  publisher={INFORMS}
+}). 
 
 **Interpretation** 
 Policy Implications and Recommendations
