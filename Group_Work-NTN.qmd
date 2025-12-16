@@ -1038,45 +1038,580 @@ if __name__ == "__main__":
 
 ## Q4: What are the likely pros and cons of the proposal?
 
-### Implications for the Mayor
-**Potential benefits:**  
-- 
--
+**Data analysis (Evidence)**
+This assessment draws on three strands of empirical evidence:
+- scale and proportion indicators identifying who would be affected;
+- host-level operating intensity measured through unavailable nights (KDE);
+- MSOA-level spatial distributions highlighting uneven policy impacts.
 
-**Potential drawbacks:**  
-- 
-- 
+In terms of scale, professional hosts account for only 9.4% of all Airbnb hosts in London, yet they control 32.9% of all listings, 50.8% of entire-home listings, and 41.4% of total operating nights. This indicates a high regulatory leverage: targeting a relatively small group has the potential to affect a large share of housing use intensity (see @fig-combined-metrics and @fig-policy_matrix).
+
+
+![combined_metrics](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/6a28bdfe9ca0bc13f277ebe0b1a7b3b2801aa72f/combined_metrics.png)
+
+
+![Policy matrix](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/6a28bdfe9ca0bc13f277ebe0b1a7b3b2801aa72f/policy_matrix.png){#fig-policy_matrix fig-cap="Policy matrix" width=80%}
+
+
+
+Operating intensity is highly uneven across professional hosts. KDE results show that inner-city short-term professional hosts exhibit the highest intensity, with a median of approximately 293 unavailable nights per year, reflecting strongly commercialised use. In contrast, outer-city long-term professional hosts show much lower intensity (median ≈ 142 nights), closer to residential or semi-commercial use.
+
+
+MSOA-level maps further reveal a spatial asymmetry. High-intensity short-term activity is concentrated in a small number of central MSOAs, while outer-city long-term activity is spatially dispersed with relatively low local pressure. This suggests that policy benefits and policy burdens are unlikely to fall in the same places.
+
+Operating intensity is highly uneven across professional hosts. As shown in @fig-distribution-operating-intensity-inner-city,KDE results show that inner-city short-term professional hosts exhibit the highest intensity, with a median of approximately 293 unavailable nights per year, reflecting strongly commercialised use. In contrast, outer-city long-term professional hosts show much lower intensity (median ≈ 142 nights), closer to residential or semi-commercial use.
+
+![Distribution of Operating Intensity – Inner-city Short-term Professional Hosts](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/48779e52ebb83ed31a2676ca9df67d76614840bc/distribution_operating_intensity_inner_city.png)
+
+As shown in @fig-uneven-operating-intensity-leverage-vs-costs，MSOA-level maps further reveal a spatial asymmetry. High-intensity short-term activity is concentrated in a small number of central MSOAs, while outer-city long-term activity is spatially dispersed with relatively low local pressure(see @fig-msoa-operating-nights-outer-city-long-term). This suggests that policy benefits and policy burdens are unlikely to fall in the same places. As shown in @fig-msoa-concentration-operating-nights-inner-city-short-term, MSOA-level analysis indicates that operating nights among inner-city short-term professional hosts are highly concentrated in a small number of central MSOAs.
+
+
+![MSOA-level Operating Nights Outer-city Long-term Professional Hosts](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/48779e52ebb83ed31a2676ca9df67d76614840bc/MSOA-level%20Operating%20Nights%20Outer-city%20Long-term%20Professional%20Hosts.png)
+
+![Uneven Spatial Distribution of Operating Intensity: High Leverage vs Uneven Costs](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/48779e52ebb83ed31a2676ca9df67d76614840bc/Uneven%20Spatial%20Distribution%20of%20Operating%20Intensity%20High%20Leverage%20vs%20Uneven%20Costs.png)
+![MSOA-level Concentration of Operating Nights Inner-city Short-term Professional Hosts](https://raw.githubusercontent.com/Taoo2025/casa0013_fsds_finalwork/48779e52ebb83ed31a2676ca9df67d76614840bc/MSOA-level%20Concentration%20of%20Operating%20Nights%20Inner-city%20Short-term%20Professional%20Hosts.png)
+
+
+
+
+### Implications for the Mayor
+
+**Potential benefits**  
+- The proposal offers high regulatory leverage. By targeting around 9.4% of Airbnb hosts, it addresses over 40% of entire-home operating nights, allowing the Mayor to demonstrate decisive action with a relatively limited regulatory scope. The policy narrative is also clear: data consistently point to inner-city short-term professional hosts as the main drivers of commercialised housing use, closely aligning with public concerns about Airbnb being “out of control”.
+
+**Potential drawbacks**  
+- The policy risks being perceived as overly broad. A substantial share of affected professional hosts are outer-city, long-term oriented landlords whose contribution to housing pressure is comparatively modest. As long-term oriented hosts account for roughly 86% of affected professional landlords, the proposal may provoke political resistance from groups not central to the core problem, potentially weakening electoral support and policy legitimacy.
 
 ### Implications for Residents
-**Potential benefits:**  
-- 
--
+**Potential benefits**  
+- Residents living in the most affected inner-city neighbourhoods are likely to benefit the most, as the regulation focuses on areas where homes are most frequently taken out of residential use and short-term tourist activity is most intense. The spatial evidence reflects residents’ everyday experiences of noise, overcrowding, and neighbourhood disruption.
 
-**Potential drawbacks:**  
-- 
-- 
+**Potential drawbacks**  
+- The benefits are not evenly shared. Residents in outer London may experience little direct improvement in housing conditions, while still being indirectly affected by the policy. This creates concerns about fairness, as communities that face fewer Airbnb-related pressures may still bear part of the policy’s social and economic costs. 
 
 ### Implications for the City
-**Potential benefits:**  
-- 
--
+**Potential benefits**  
+- From a city-wide perspective, the proposal targets a spatially concentrated problem. KDE and MSOA analyses show that the most intensive short-term use of entire homes is clustered in a limited number of inner-city areas, making enforcement and monitoring more feasible. The policy also aligns strategically with broader urban goals by directly addressing touristification and housing pressure in central neighbourhoods.
 
-**Potential drawbacks:**  
-- 
-- 
+**Potential drawbacks**  
+- The spatial distribution of costs and benefits is uneven. While policy gains are generated mainly in high-pressure inner-city areas, a significant share of regulatory burden falls on outer London, where professional hosting activity is more dispersed and less intensive. Without spatial or intensity-based differentiation, the policy risks inefficient resource allocation and may impose disproportionate costs on areas that are not the primary source of the problem.
 
-### Spatial Evidence: High Leverage vs Uneven Costs
-**Key Spatial Patterns** 
-
-**Interpretation** 
 
 ```{python}
-# 这里才写 Python
+#Below is a cost-benefit analysis and the data analysis it requires.
+## A. Basic Preparation: Measuring Days Unavailable
+## B. Baseline Scale of the Entire Airbnb Market (Denominator)
+## C. Entire-Home Listings as the Core Source of Housing Pressure
+## D. Policy-Relevant Target Group: Professional Hosts
+## E. Coverage Ratios: Scale-Based Evidence of Policy Reach
+## F. Host-Level Structure of Four Types of Professional Hosts
+## G. Combined Short-Term / Long-Term Rental Perspective
+## H. Three-Sided Cost–Benefit Matrix
+# Basic Preparation: Measuring Days Unavailable
 import pandas as pd
-import geopandas as gpd
+import numpy as np
 
-df = pd.read_csv("data/listings.csv")
-df.head()
+# Ensure that there is days_unavailable
+if "days_unavailable" not in df_clean.columns:
+    df_clean["days_unavailable"] = 365 - df_clean["availability_365"]
+    
+#  Baseline Scale of the Entire Airbnb Market (Denominator)
+total_listings = df_clean["id"].nunique()
+total_hosts = df_clean["host_id"].nunique()
+
+# Entire-Home Listings as the Core Source of Housing Pressure
+df_entire = df_clean[df_clean["room_type"] == "Entire home/apt"].copy()
+
+total_entire_listings = df_entire["id"].nunique()
+total_entire_nights = df_entire["days_unavailable"].sum()
+
+#Entire-home listings ≈ dwellings that are potentially “functionally withdrawn” from residential use.
+#Total operating nights ≈ the intensity with which housing resources are consumed by the market;
+#Policy-Relevant Target Group: Professional Hosts
+affected_listings = df_professional["id"].nunique()
+affected_hosts = df_professional["host_id"].nunique()
+affected_nights = df_professional["days_unavailable"].sum()
+#Coverage ratio indicator (core evidence of policy merits)
+share_affected_hosts = affected_hosts / total_hosts
+share_affected_listings_all = affected_listings / total_listings
+share_affected_listings_entire = affected_listings / total_entire_listings
+share_affected_nights_entire = affected_nights / total_entire_nights
+# At the listing level, actual operating nights are aggregated by host.
+host_nights = (
+    df_professional
+    .groupby("host_id")
+    .agg(
+        sum_days_unavailable=("days_unavailable", "sum")
+    )
+    .reset_index()
+)
+print(host_level.columns.tolist())
+host_level["days_unavailable_intensity"] = host_level["median_days_unavailable"]
+host_level.columns
+#F.Host-level: Actual Operating Structure of Four Types of Professional Hosts
+#F1.First, ensure that the host level contains “actual total nights”
+# The host_level dataset should already include:
+# - n_listings
+# - days_unavailable_intensity
+
+host_group_summary = (
+    host_level
+    .groupby("host_group")
+    .agg(
+        n_hosts=("host_id", "count"),
+        avg_n_listings=("n_listings", "mean"),
+        total_nights=("days_unavailable_intensity", "sum"),
+        avg_nights=("days_unavailable_intensity", "mean")
+    )
+    .reset_index()
+)
+#F2.The proportion within the professional landlord sector
+host_group_summary["share_of_prof_hosts"] = (
+    host_group_summary["n_hosts"] / host_group_summary["n_hosts"].sum()
+)
+
+host_group_summary["share_of_prof_nights"] = (
+    host_group_summary["total_nights"] / host_group_summary["total_nights"].sum()
+)
+#G. Combined Short-Term / Long-Term Rental Perspective
+host_group_summary["term_type"] = np.where(
+    host_group_summary["host_group"].str.contains("long-term", case=False),
+    "Long-term oriented",
+    "Short-term oriented"
+)
+
+term_summary = (
+    host_group_summary
+    .groupby("term_type")
+    .agg(
+        n_hosts=("n_hosts", "sum"),
+        total_nights=("total_nights", "sum")
+    )
+    .reset_index()
+)
+
+term_summary["share_of_prof_hosts"] = (
+    term_summary["n_hosts"] / term_summary["n_hosts"].sum()
+)
+term_summary["share_of_prof_nights"] = (
+    term_summary["total_nights"] / term_summary["total_nights"].sum()
+)
+
+#H. Stakeholder perspective (for an electoral briefing)
+#H1. Mayor
+benefit_mayor = pd.DataFrame({
+    "metric": [
+        "affected_listings_share_of_all",
+        "affected_listings_share_of_entire",
+        "affected_nights_share_of_entire"
+    ],
+    "value": [
+        share_affected_listings_all,
+        share_affected_listings_entire,
+        share_affected_nights_entire
+    ]
+})
+
+cost_mayor = pd.DataFrame({
+    "metric": [
+        "affected_hosts_share_of_all_hosts",
+        "long_term_hosts_share_within_affected"
+    ],
+    "value": [
+        share_affected_hosts,
+        float(
+            term_summary
+            .loc[term_summary["term_type"] == "Long-term oriented",
+                 "share_of_prof_hosts"]
+            .iloc[0]
+        )
+    ]
+})
+#H2. City
+city_benefit = pd.DataFrame({
+    "metric": [
+        "share_affected_listings_of_entire_homes",
+        "share_affected_nights_of_entire_homes",
+        "inner_short_nights_share_of_prof_nights"
+    ],
+    "value": [
+        share_affected_listings_entire,
+        share_affected_nights_entire,
+        float(
+            host_group_summary
+            .loc[
+                host_group_summary["host_group"]
+                == "Inner-city short-term professional hosts",
+                "share_of_prof_nights"
+            ]
+            .fillna(0)
+            .iloc[0]
+        )
+    ]
+})
+
+city_cost = pd.DataFrame({
+    "metric": [
+        "outer_long_hosts_share_of_prof_hosts",
+        "outer_long_nights_share_of_prof_nights"
+    ],
+    "value": [
+        float(
+            host_group_summary
+            .loc[
+                host_group_summary["host_group"]
+                == "Outer-city long-term professional hosts",
+                "share_of_prof_hosts"
+            ]
+            .fillna(0)
+            .iloc[0]
+        ),
+        float(
+            host_group_summary
+            .loc[
+                host_group_summary["host_group"]
+                == "Outer-city long-term professional hosts",
+                "share_of_prof_nights"
+            ]
+            .fillna(0)
+            .iloc[0]
+        )
+    ]
+})
+
+#H3. Residents
+resident_benefit = pd.DataFrame({
+    "metric": [
+        "affected_entire_listings_share",
+        "affected_entire_nights_share"
+    ],
+    "value": [
+        share_affected_listings_entire,
+        share_affected_nights_entire
+    ]
+})
+
+resident_cost = pd.DataFrame({
+    "metric": [
+        "affected_prof_hosts_share_of_all_hosts",
+        "outer_long_term_prof_hosts_share"
+    ],
+    "value": [
+        share_affected_hosts,
+        city_cost.loc[
+            city_cost["metric"] == "outer_long_hosts_share_of_prof_hosts",
+            "value"
+        ].iloc[0]
+    ]
+})
+
+#Synthesised into a single “policy trade-off matrix”
+def tag(df, stakeholder, side):
+    out = df.copy()
+    out["stakeholder"] = stakeholder
+    out["side"] = side
+    return out
+
+combined_metrics = pd.concat([
+    tag(benefit_mayor,   "Mayor",     "Benefit"),
+    tag(cost_mayor,     "Mayor",     "Cost"),
+    tag(city_benefit,   "City",      "Benefit"),
+    tag(city_cost,      "City",      "Cost"),
+    tag(resident_benefit, "Residents", "Benefit"),
+    tag(resident_cost,    "Residents", "Cost"),
+], ignore_index=True)
+print(combined_metrics)
+
+# First, define a helper function to aggregate indicators for each stakeholder.
+
+def build_policy_matrix(metrics_df):
+    # Create an empty matrix table
+    stakeholders = metrics_df['stakeholder'].unique()
+    sides = metrics_df['side'].unique()
+    table = pd.DataFrame(index=sides, columns=stakeholders, dtype=object)
+    
+    # Complete the form
+    for stakeholder in stakeholders:
+        for side in sides:
+            metric_map = metrics_df[(metrics_df['stakeholder'] == stakeholder) & (metrics_df['side'] == side)]
+            cell_lines = []
+            for _, row in metric_map.iterrows():
+                label = row['metric']
+                value = row['value']
+                line = f"{label}: {value:.1%}"  # Convert the results into percentages
+                cell_lines.append(line)
+            table.loc[side, stakeholder] = "\n".join(cell_lines)
+    return table
+
+# Use the newly generated combined_metrics to construct the matrix.
+policy_matrix = build_policy_matrix(combined_metrics)
+
+# Display Matrix Table
+import pandas as pd
+print(policy_matrix)
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+#Filter rows from the host_level dataset where the group is “Inner-city short-term professional hosts”
+#This subset represents the group of “inner-city short-term professional hosts”
+inner_short_hosts = host_level[
+    host_level["host_group"] == "Inner-city short-term professional hosts"
+]
+plt.figure(figsize=(9, 6))
+#Use seaborn’s `kdeplot` to draw a kernel density estimation (KDE) plot.
+sns.kdeplot(
+    data=inner_short_hosts,
+    x="mean_days_unavailable",
+    fill=True,
+    alpha=0.5
+)
+
+plt.title(
+    "Distribution of Operating Intensity\nInner-city Short-term Professional Hosts",
+    fontsize=13
+)
+plt.xlabel("Average Number of Unavailable Nights per Host")
+plt.ylabel("Density")
+# Define the save path
+output_dir = "plotsQ2"  
+filename = "Distribution of Operating Intensity\nInner-city Short-term Professional Hosts.png"
+
+# Create folder (if it does not exist)
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# Stitch together the complete path
+file_path = os.path.join(output_dir, filename)
+
+# Save image
+plt.savefig(file_path, dpi=300, bbox_inches="tight")
+print(f"Image saved to:{file_path}")
+plt.show()
+# Retrieve London MSOA data
+msoa = gpd.read_file("https://github.com/Taoo2025/casa0013_fsds_finalwork/raw/refs/heads/main/data_use/london_msoa_boundaries.gpkg") 
+print(msoa.columns)
+# Create a GeoDataFrame from a regular DataFrame
+
+# A GeoDataFrame is the core data structure of the GeoPandas library, extending a standard DataFrame with geographic geometry information
+
+gdf_listings = gpd.GeoDataFrame(
+    df_professional,
+    geometry=gpd.points_from_xy(
+        df_professional["longitude"],
+        df_professional["latitude"]
+    ),
+    crs="EPSG:4326"
+)
+gdf_listings = gdf_listings.to_crs(msoa.crs)
+
+#Link listings to MSOAs (spatial linkage).
+gdf_listings_msoa = gpd.sjoin(
+    gdf_listings,
+    msoa[[ "MSOA11CD", "geometry" ]],
+    how="left",
+    predicate="within"
+)
+#Extract `host_group` from `host_level`.
+host_groups = host_level[["host_id", "host_group"]].copy()
+#Merge it back to the listing level.
+gdf_listings_msoa = gdf_listings_msoa.merge(
+    host_groups,
+    on="host_id",
+    how="left"
+)
+print(gdf_listings_msoa.columns)
+#Inner City · Short-Term Rentals · Professional Landlords
+inner_short = gdf_listings_msoa[
+    gdf_listings_msoa["host_group"]
+    == "Inner-city short-term professional hosts"
+]
+msoa_inner_short = (
+    inner_short
+    .groupby("MSOA11CD")
+    .agg(
+        inner_short_nights=("days_unavailable", "sum"),
+        inner_short_listings=("id", "count")
+    )
+    .reset_index()
+)
+# Left-join the MSOA geospatial data with the msoa_inner_short summary statistics using the MSOA11CD column
+# MSOA11CD is the unique identifier for UK MSOAs (Middle Layer Super Output Areas) and serves as the join key
+msoa = msoa.merge(
+    msoa_inner_short,
+    on="MSOA11CD",
+    how="left"
+)
+# Handle missing values after the merge: fill NaN values in the inner_short_nights and inner_short_listings columns with 0
+# Select these two columns, apply fillna(0), and then assign the result back to the original DataFrame
+msoa[["inner_short_nights", "inner_short_listings"]] = (
+    msoa[["inner_short_nights", "inner_short_listings"]]
+    .fillna(0)
+)
+#Mapping the Core Policies of the MSOA
+fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+
+msoa.plot(
+    column="inner_short_nights",
+    cmap="Reds",
+    linewidth=0.2,
+    edgecolor="grey",
+    legend=True,
+    scheme="NaturalBreaks",
+    k=5,
+    ax=ax
+)
+
+ax.set_title(
+    "MSOA-level Concentration of Operating Nights\n"
+    "Inner-city Short-term Professional Hosts",
+    fontsize=12
+)
+
+ax.axis("off")
+
+# Define the save path
+output_dir = "plotsQ2"  
+filename = "MSOA-level Concentration of Operating Nights Inner-city Short-term Professional Hosts.png"
+
+# Create the folder (if it does not exist)
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# Stitch together the complete path
+file_path = os.path.join(output_dir, filename)
+
+# Save image
+plt.savefig(file_path, dpi=300, bbox_inches="tight")
+print(f"Image saved to:{file_path}")
+plt.show()
+
+# Filter listings from the GeoDataFrame gdf_listings_msoa for a specific group
+# Selection criterion: host_group equals “Outer-city long-term professional hosts”
+outer_long = gdf_listings_msoa[
+    gdf_listings_msoa["host_group"]
+    == "Outer-city long-term professional hosts"
+]
+# Group the data by MSOA11CD (the unique identifier for UK MSOA areas) and aggregate the statistics
+# The result is the total number of unavailable nights attributable to outer-city long-term professional hosts for each MSOA
+msoa_outer_long = (
+    outer_long
+    .groupby("MSOA11CD")
+    .agg(
+        outer_long_nights=("days_unavailable", "sum")
+    )
+    .reset_index()
+)
+msoa = msoa.merge(
+    msoa_outer_long,
+    on="MSOA11CD",
+    how="left"
+)
+
+msoa["outer_long_nights"] = msoa["outer_long_nights"].fillna(0)
+
+fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+
+msoa.plot(
+    column="outer_long_nights",
+    cmap="Blues",
+    linewidth=0.2,
+    edgecolor="grey",
+    legend=True,
+    scheme="NaturalBreaks",
+    k=5,
+    ax=ax
+)
+
+ax.set_title(
+    "MSOA-level Operating Nights\n"
+    "Outer-city Long-term Professional Hosts",
+    fontsize=12
+)
+
+ax.axis("off")
+
+# Define the save path
+output_dir = "plotsQ2" 
+filename = "MSOA-level Operating Nights Outer-city Long-term Professional Hosts.png"
+
+# Create the folder (if it does not exist)
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# Stitch together the complete path
+file_path = os.path.join(output_dir, filename)
+
+# Save image
+plt.savefig(file_path, dpi=300, bbox_inches="tight")
+print(f"Image saved to:{file_path}")
+plt.show()
+
+
+# Compute the maximum value across the two indicators to serve as a shared upper bound (vmax) for both maps
+
+# This ensures that colour intensity corresponds to the same value range in both figures, facilitating direct comparison
+
+vmax = max(
+    msoa["inner_short_nights"].max(),
+    msoa["outer_long_nights"].max()
+)
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+# Benefit: inner-city short-term rentals
+msoa.plot(
+    column="inner_short_nights",
+    cmap="Reds",
+    linewidth=0.2,
+    edgecolor="grey",
+    legend=True,
+    vmin=0,
+    vmax=vmax,
+    ax=axes[0]
+)
+
+#Set the title of the first subplot, using `\n` to insert a line break for improved layout and readability.
+axes[0].set_title("Inner-city Short-term Professional Hosts\nOperating Nights")
+axes[0].axis("off")
+
+# Cost: outer-city long-term rentals
+msoa.plot(
+    column="outer_long_nights",
+    cmap="Blues",
+    linewidth=0.2,
+    edgecolor="grey",
+    legend=True,
+    vmin=0,
+    vmax=vmax,
+    ax=axes[1]
+)
+#Set the title of the second subplot.
+axes[1].set_title("Outer-city Long-term Professional Hosts\nOperating Nights")
+axes[1].axis("off")
+#Set the overall title of the figure.
+plt.suptitle(
+    "Uneven Spatial Distribution of Operating Intensity\n"
+    "High Leverage vs Uneven Costs",
+    fontsize=14
+)
+# Define the save path
+output_dir = "plotsQ2"  
+filename = "Uneven Spatial Distribution of Operating Intensity High Leverage vs Uneven Costs.png"
+
+# Create the folder (if it does not exist)
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# Stitch together the complete path
+file_path = os.path.join(output_dir, filename)
+
+# Save image
+plt.savefig(file_path, dpi=300, bbox_inches="tight")
+print(f"Image saved to:{file_path}")
+plt.show()
+
+
 ```
 ## Q5: Can the story be reframed positively in terms of social mobility?
 
@@ -1196,6 +1731,7 @@ df.head()
   year         = {2024},
  url= {https://researchbriefings.files.parliament.uk/documents/CBP-8395/CBP-8395.pdf}}
 }
+
 
 
 
