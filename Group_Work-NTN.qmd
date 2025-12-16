@@ -557,631 +557,496 @@ plt.show()
 ## Q3: How many properties would be affected by the proposal?
 
 **Short answer:**
-Our code identifies 31,755 entire home listings as affected by the proposal, linked to 5,222 professional hosts.
+According to the analysis, 31755 entire home listings would be affected by the proposal.
 
 **Evidence:**
-Professional hosts represent about 9.4 percent of all hosts in the dataset, yet they control about 50.8 percent of entire home listings and account for about 41.4 percent of entire home unavailable nights.
+The analysis filters the dataset to entire home listings and identifies professional hosts as those operating two or more such listings. All entire home listings operated by these hosts are counted as affected properties.
 
 **Interpretation:**
-In our notebook, the number of affected properties is derived from a clear operational definition of who the proposal targets. We treat the proposal as applying to professional operators rather than occasional hosts, and we define professional hosts as those running at least two entire home listings. The affected properties are then the entire home listings controlled by these professional hosts. Using this approach, the proposal reaches a large part of the entire home market even though it directly applies to a relatively small fraction of hosts. This is one of the most important findings for the policy discussion because it shows that the market is structurally uneven. A small subset of hosts holds a high share of the housing units that are being used as entire home short term rentals.
+The number of affected properties is produced through a sequence of explicit filtering and aggregation steps. The analysis begins by restricting the dataset to entire home listings only. This step reflects the assumption embedded in the proposal that entire home short term rentals are the relevant unit of impact. Listings that are private rooms or shared rooms are excluded at this stage and do not contribute to the final count.
 
-The distributional pattern becomes even more meaningful when we consider activity intensity. Our notebook uses unavailable nights as a proxy for how intensively listings are being used for short term rental activity. Under this measure, affected listings account for a substantial share of overall entire home activity. This matters because policy impact should not be interpreted purely through the number of listings. If the regulated segment were mostly inactive, the proposal would likely be symbolic. In contrast, the results indicate that the regulated segment is also a major contributor to commercial use. For this reason, the proposal has the potential to change real market behaviour if compliance is achieved, since the regulated group contributes a large portion of the nights that are not available for ordinary residential use.
-Our spatial work also gives the affected number a geographic interpretation. The notebook shows that professional short-term activity is not spread evenly across London but is concentrated in inner city boroughs and specific MSOA clusters. This means the proposal would not only affect a large absolute number of properties, but it would also affect them in places where short term rental pressure appears most visible. In practical terms, this concentration suggests that residents in high intensity areas would be more likely to experience change from the policy, whether through reduced short term rental presence, improved compliance with rules, or shifts in how properties are used. At the same time, the notebook also identifies professional activity in outer areas that is more long term oriented. This warns against assuming that every regulated listing is equally connected to the same housing pressures. The headline number therefore needs to be interpreted together with the typology results, which show variation in intensity and location across professional hosts.
-Overall, our results suggest that the proposal’s scope is large in terms of entire home supply, because it covers around half of the entire home market while focusing on roughly one tenth of hosts. This indicates high policy leverage. It also implies that implementation details will matter, because a policy that changes behaviour among professional hosts could influence a large share of entire home short term rental activity across London, especially in the inner-city hotspots identified in our analysis.
+The code then classifies hosts according to the number of entire home listings they operate. Hosts with two or more entire home listings are labelled as professional hosts. This classification is applied uniformly across the dataset and does not rely on external information such as ownership records or income data. Once hosts are classified in this way the affected properties are defined mechanically as all entire home listings associated with professional hosts. The final number of affected properties is therefore not inferred or estimated but counted directly from the listings that meet these criteria.
+
+An important implication of this approach is that the affected count reflects listings rather than hosts. A single professional host may contribute multiple affected properties to the total. This explains why the number of affected properties is large relative to the number of hosts identified as professional. The analysis treats each entire home listing as a separate property that would fall under the proposal regardless of whether listings belong to the same host. As a result, the count captures the scale of housing units potentially influenced by the proposal rather than the number of individuals subject to regulation.
+
+The analysis also uses unavailable nights to describe the activity associated with these listings but this measure does not change which properties are counted as affected. Instead, it provides additional context on how intensively the affected listings are used. The affected property count itself depends only on listing type and host classification and remains stable regardless of variation in activity levels across listings.
+
+Overall, the results show that the proposal would apply to a clearly defined and countable set of properties derived from transparent rules implemented in the code. The figure of 31755 affected properties is therefore best interpreted as a direct description of scope within the dataset rather than as a prediction of behavioural change or housing outcomes.
 
 ```{python}
 import pandas as pd
 import numpy as np
+from typing import Dict
 
-df = pd.read_csv("/Users/chang/Desktop/0013/data/listings.csv") 
-print(df.head())
+import geopandas as gpd
+from sklearn.preprocessing import MinMaxScaler
 
-print(df.shape)
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib.patches as mpatches
 
-# Uniform column names
-df.columns = df.columns.str.lower()
-key_columns = [
-    "id",
-    "host_id",
-    "room_type",
-    "availability_365",
-    "maximum_nights",
-    "neighbourhood_cleansed",
-    "latitude",
-    "longitude"
-]
-df_select = df[key_columns].copy()
+from pathlib import Path
+Path("output").mkdir(exist_ok=True)
 
-df_select["availability_365"] = pd.to_numeric(
-    df_select["availability_365"],
-    errors="coerce"
-)
+# =========================
+# 0) CONFIG
+# =========================
+AIRBNB_CSV_PATH   = r"listings.csv"
+MSOA_GPKG_PATH    = r"QGIS_wk1_gepkg.gpkg"
+MSOA_LAYER        = "qgis_wk1_gepkg__london_borough_fly_tipping"
+OUTPUT_PNG_PATH   = "output/airbnb_kde_borough_groups.png"
 
-df_select["maximum_nights"] = pd.to_numeric(
-    df_select["maximum_nights"],
-    errors="coerce"
-)
-df_clean = (
-    df_select
-    .dropna(subset=[
-        "availability_365",
-        "maximum_nights",
-        "host_id",
-        "room_type",
-        "neighbourhood_cleansed",
-        "latitude",
-        "longitude"
-    ])
-    .reset_index(drop=True)
-)
+WEIGHTS: Dict[str, float] = {
+    "I1_professional": 0.30,
+    "I2_entire_home": 0.35,
+    "I3_potential_violation": 0.15,
+    "I4_economic_potential": 0.20
+}
 
-print(df_clean.head())
-
-print("Before NA cleaning:", len(df_select))
-print("After NA cleaning:", len(df_clean))
-
-# 1. Only keep the entire set of properties
-df_entire = df_clean[df_clean["room_type"] == "Entire home/apt"].copy()
-
-# 2. Count the total number of houses owned by each landlord
-host_entire_counts = (
-    df_entire
-    .groupby("host_id")
-    .size()
-    .reset_index(name="n_entire_homes")
-)
-
-# 3. Professional landlord: ≥ 2 properties
-professional_hosts = host_entire_counts[
-    host_entire_counts["n_entire_homes"] >= 2
-]
-
-# 4. Return to the listing level
-df_professional = df_entire.merge(
-    professional_hosts[["host_id"]],
-    on="host_id",
-    how="inner"
-)
-
-#The total number of professional landlords, regardless of grouping
-n_professional_hosts = professional_hosts.shape[0]
-
-print("Number of professional hosts:", n_professional_hosts)
-
-print(len(df_professional))
-print(df_professional.head())
-
-#group
-df_professional["neighbourhood_cleansed"].unique()
-
-inner_boroughs = [
+# =========================
+# 1) Borough group definitions (based on The literature 'Travers, Tony, Sam Sims and Nicholas Bosetti. 2016. "Housing and Inequality in London". Centre for London. https://www.centreforlondon.org/wp-content/uploads/2016/08/CFLJ4292-London-Inequality-04_16_WEB_V4.pdf', defines the inner city boundaries (Travers et al. 2016:17).
+# =========================
+INNER_WEST = [
     "Camden",
-    "Hackney",
-    "Islington",
+    "City of London",
+    "Westminster", 
     "Kensington and Chelsea",
-    "Lambeth",
-    "Southwark",
-    "Tower Hamlets",
-    "Westminster",
     "Hammersmith and Fulham",
     "Wandsworth",
-    "Lewisham",
+]
+
+INNER_EAST = [
     "Haringey",
+    "Hackney",
+    "Islington",
+    "Tower Hamlets",
     "Newham",
-    "City of London"
+    "Lambeth",
+    "Southwark",
+    "Lewisham",
 ]
-#Inner London is defined as a set of central boroughs, including the City of London, which constitutes the historic and functional core of London and is consistently classified as part of Inner London in official statistics.
 
-df_professional["inner_city"] = np.where(
-    df_professional["neighbourhood_cleansed"].isin(inner_boroughs),
-    "Inner London",
-    "Outer London"
-)
-print(df_professional.head())
+OUTER_EAST_AND_NORTH_EAST = [
+    "Enfield",
+    "Waltham Forest",
+    "Redbridge",
+    "Barking and Dagenham",
+    "Havering",
+    "Greenwich",
+    "Bexley",
+]
 
-median_availability = df_professional["availability_365"].median()
-mode_availability = df_professional["availability_365"].mode()
-median_min_nights = df_professional["maximum_nights"].median()
-mode_min_nights = df_professional["maximum_nights"].mode()
-print("Availability_365:")
-print("  Median:", median_availability)
-print("  Mode(s):", mode_availability.tolist())
+OUTER_WEST_AND_NORTH_WEST = [
+    "Barnet",
+    "Brent",
+    "Harrow",
+    "Hillingdon",
+    "Ealing",
+    "Hounslow",
+    "Richmond upon Thames",
+]
 
-print("\nmaximum_nights:")
-print("  Median:", median_min_nights)
-print("  Mode(s):", mode_min_nights.tolist())
-#Availability_365:
-  #Median: 189.0
-  #Mode(s): [0]
+OUTER_SOUTH = [
+    "Kingston upon Thames",
+    "Merton",
+    "Sutton",
+    "Croydon",
+    "Bromley",
+]
 
-#maximum_nights:
- #Median: 365.0
-  #Mode(s): [365]
-#The median availability of 189 days indicates that more than half of professional listings are unavailable for at least 176 days per year, suggesting a substantial degree of functional withdrawal from the housing market.
-#By contrast, the median and modal maximum night setting of 365 indicates that most professional hosts impose no effective upper limit on booking duration, reflecting platform rule configuration rather than realised rental behaviour.
-#Maximum night settings are used to identify the intended market role of professional hosts, distinguishing listings designed as long-term or quasi-hotel assets. Availability-based measures are subsequently employed to assess the intensity of commercial operation and its potential social externalities.
 
-df_professional["rental_role"] = np.where(
-    df_professional["maximum_nights"] > 90,
-    "Long-term oriented",
-    "Short-term oriented"
-)
+def make_borough_group_map() -> dict:
+    group_map = {}
+    for n in INNER_WEST:
+        group_map[n] = "Inner West"
+    for n in INNER_EAST:
+        group_map[n] = "Inner East"
+    for n in OUTER_EAST_AND_NORTH_EAST:
+        group_map[n] = "Outer East & North East"
+    for n in OUTER_WEST_AND_NORTH_WEST:
+        group_map[n] = "Outer West & North West"
+    for n in OUTER_SOUTH:
+        group_map[n] = "Outer South"
+    return group_map
 
-df_professional["days_unavailable"] = (
-    365 - df_professional["availability_365"]
-)
 
-print(df_professional.head())
+def add_borough_groups_strict(boundary_gdf: gpd.GeoDataFrame, name_col: str = "NAME") -> gpd.GeoDataFrame:
+    """
+    Add 'group' column. No 'Unclassified':
+    - If any borough cannot be mapped, raise an error and print missing names.
+    """
+    gdf = boundary_gdf.copy()
+    gdf[name_col] = gdf[name_col].astype(str).str.strip()
 
-#group
-host_level = (
-    df_professional
-    .groupby("host_id")
-    .agg(
-        n_listings=("id", "count"),
-
-        # Spatial orientation (majority principle)
-        share_inner_city=("inner_city", lambda x: (x == "Inner London").mean()),
-
-        # Market Role (Majority Principle, Based on maximum_nights)
-        share_long_term_role=("rental_role", lambda x: (x == "Long-term oriented").mean()),
-
-        # Operational intensity (descriptive, not for classification)
-        median_days_unavailable=("days_unavailable", "median"),
-        mean_days_unavailable=("days_unavailable", "mean")
+    # normalize (handle & vs and)
+    gdf["_name_norm"] = (
+        gdf[name_col]
+        .str.replace("&", "and", regex=False)
+        .str.replace("  ", " ", regex=False)
+        .str.strip()
     )
-    .reset_index()
-)
 
-host_level["dominant_location"] = np.where(
-    host_level["share_inner_city"] >= 0.5,
-    "Inner London",
-    "Outer London"
-)
+    group_map = make_borough_group_map()
+    group_map_norm = {k.replace("&", "and").strip(): v for k, v in group_map.items()}
 
-host_level["dominant_rental_role"] = np.where(
-    host_level["share_long_term_role"] >= 0.5,
-    "Long-term oriented",
-    "Short-term oriented"
-)
+    gdf["group"] = gdf["_name_norm"].map(group_map_norm)
+    missing = gdf.loc[gdf["group"].isna(), name_col].tolist()
 
-host_level["host_group"] = "Unclassified"
+    gdf = gdf.drop(columns=["_name_norm"])
 
-host_level.loc[
-    (host_level["dominant_location"] == "Inner London") &
-    (host_level["dominant_rental_role"] == "Short-term oriented"),
-    "host_group"
-] = "Inner-city short-term professional hosts"
-
-host_level.loc[
-    (host_level["dominant_location"] == "Inner London") &
-    (host_level["dominant_rental_role"] == "Long-term oriented"),
-    "host_group"
-] = "Inner-city long-term professional hosts"
-
-host_level.loc[
-    (host_level["dominant_location"] == "Outer London") &
-    (host_level["dominant_rental_role"] == "Short-term oriented"),
-    "host_group"
-] = "Outer-city short-term professional hosts"
-
-host_level.loc[
-    (host_level["dominant_location"] == "Outer London") &
-    (host_level["dominant_rental_role"] == "Long-term oriented"),
-    "host_group"
-] = "Outer-city long-term professional hosts"
-
-host_level["host_group"].value_counts()
-
-host_level.groupby("host_group")[[
-    "median_days_unavailable",
-    "mean_days_unavailable"
-]].describe()
-
-##Data normalization processing (optional)
-import pandas as pd
-import numpy as np
-import geopandas as gpd
-def minmax(series: pd.Series) -> pd.Series:
-    s = pd.to_numeric(series, errors="coerce")
-    s_min, s_max = s.min(), s.max()
-    if pd.isna(s_min) or pd.isna(s_max) or s_min == s_max:
-        return pd.Series(0.5, index=s.index)
-    return (s - s_min) / (s_max - s_min)
-  
-  import pandas as pd
-import numpy as np
-if "days_unavailable" not in df_clean.columns and "availability_365" in df_clean.columns:
-    df_clean["days_unavailable"] = 365 - df_clean["availability_365"]
-    
-# 2. Because to calculate the share, a basic scale of the entire Airbnb needs to be prepared.
-total_listings = df_clean["id"].nunique()          # Total number of available properties
-total_hosts = df_clean["host_id"].nunique()        # Total number of landlords
-#All the following "print" statements can be removed / This is just for checking purposes
-print(f"Total number of available (total_listings): {total_listings}")
-print(f"Total number of landlords (total_hosts): {total_hosts}")
-# Just consider the entire property/evaluate the potential impact on benefits
-df_entire = df_clean[df_clean["room_type"] == "Entire home/apt"].copy()
-total_entire_listings = df_entire["id"].nunique()  # The entire entire house listing 
-total_entire_nights = df_entire["days_unavailable"].sum()  # Total "booking days" for the entire apartment
-# Total number of affected properties / Total number of landlords: Measures the coverage scale of the policy proposal. This is the basis for calculating potential tax revenue (benefit) and political resistance (cost).
-# Total "booking days" for affected properties: Measures the intensity of the actual consumption of these properties by the market. This is the core indicator for evaluating the potential of these properties to be converted into long-term rentals. The higher the number of days, the more severely the housing resources are misused, and the greater the policy benefit.
-affected_listings = df_professional["id"].nunique()       # Directly covered by the proposal listing 
-affected_hosts = df_professional["host_id"].nunique()     # Directly covered by host 
-affected_nights = df_professional["days_unavailable"].sum() 
-print("--- Housing market impact indicators (entire property) ---")
-print(f"1. The total number of all the available properties (Entire Listings):    {total_entire_listings:,}")
-print(f"2. The total number of days that all the properties were booked(Total Nights):   {total_entire_nights:,} nights")
-print("\n--- Policy proposal impact scope indicator (professional landlords) ---")
-print(f"3. Affected Listings totally (Affected Listings):   {affected_listings:,} listings")
-print(f"4. affected_hosts totally (Affected Hosts):      {affected_hosts:,} hosts")
-print(f"5. Affected Nights totally (Affected Nights): {affected_nights:,} nights")
-# 4.Proportional indicators (the basis for "advantages" and "disadvantages" in terms of scale)
-share_affected_hosts = affected_hosts / total_hosts if total_hosts > 0 else np.nan
-share_affected_listings_all = affected_listings / total_listings if total_listings > 0 else np.nan
-share_affected_listings_entire = affected_listings / total_entire_listings if total_entire_listings > 0 else np.nan
-share_affected_nights_entire = affected_nights / total_entire_nights if total_entire_nights > 0 else np.nan
-print("--- Policy proposal covers the proportion indicator (for benefit-cost analysis)---")
-print(f"1. The proportion of affected landlords among all landlords:                  {share_affected_hosts:.1%}")
-print(f"2. The proportion of affected properties among all properties: {share_affected_listings_all:.1%}")
-print(f"3. The proportion of affected properties among all complete properties (housing pressure): {share_affected_listings_entire:.1%}")
-print(f"4. The proportion of affected properties in relation to the total "booking days" of all complete properties: {share_affected_nights_entire:.1%}")
-
-#The benefits for the mayor
-benefit_mayor = pd.DataFrame({
-    "metric": [
-        "affected_listings_share_of_all",        # Covered by the proposal listing / all listing
-        "affected_listings_share_of_entire",     # Covered by the proposal: listing / entire apartment suite
-        "affected_nights_share_of_entire_nights" # The number of days the entire suite is booked / The total number of days all the suites are booked
-    ],
-    "value": [
-        share_affected_listings_all,
-        share_affected_listings_entire,
-        share_affected_nights_entire
-    ]
-})
-
-benefit_mayor
-
-##Although the opposition policy targets only a small proportion of landlords (9.4%), 
-# it effectively covers nearly 41.4% of the resource consumption intensity associated with whole-property listings.
-#  Wachsmuth et al's (2017) research indicates that whole-property listings constitute the primary driver of housing displacement. 
-#cite：Short-term Cities: Airbnb's Impact on Canadian Housing Markets. 
-# It is precisely these commercially operated whole-property listings that constitute the actual diversion of urban housing resources. 
-# This implies that by influencing 32.9% of listings and 50.8% of housing pressure, we can address the diversion of 41.4% of housing resources – representing a significant policy lever.How much income can the landlord control - increasing municipal fiscal revenue https://www.towerhamlets.gov.uk/lgnl/planning_and_building_control/Short_term_lets.aspx#:~:text=This%20means%20that%20you%20must,guest%20houses%20(Class%20C1). 
-# The "disadvantages" of the mayor - how many landlords are affected, especially the part related to "long-term rental orientation" / They will oppose the mayor and not support the election / Short-term rental has minor dissatisfaction / Long-term rental has major dissatisfaction
-host_group_summary = (
-    host_level
-    .groupby("host_group")
-    .agg(
-        n_hosts=("host_id", "count"),                 # How many landlords are there for each type of occupation? 
-        avg_n_listings=("n_listings", "mean"),        # Per capita number of houses held
-        total_nights=("mean_days_unavailable", "sum"),# "Total number of nights operated"
-        avg_nights=("mean_days_unavailable", "mean")  
-    )
-    .reset_index()
-)
-# The proportion of each indicator for all professional landlords
-host_group_summary["share_of_prof_hosts"] = (
-    host_group_summary["n_hosts"] / host_group_summary["n_hosts"].sum()
-)
-host_group_summary["share_of_prof_nights"] = (
-    host_group_summary["total_nights"] / host_group_summary["total_nights"].sum()
-)
-
-host_group_summary
-
-# Integrating the "long-term" component into the group name - both within and outside the city - if a higher tax rate is uniformly imposed on all professional landlords, this group of hosts will be affected.
-host_group_summary["term_type"] = np.where(
-    host_group_summary["host_group"].str.contains("long-term", case=False),
-    "Long-term oriented",
-    "Short-term oriented"
-)
-
-term_summary = (
-    host_group_summary
-    .groupby("term_type")
-    .agg(
-        n_hosts=("n_hosts", "sum"),                  # The total number of hosts in this category
-        total_nights=("total_nights", "sum")         # Total operating nights
-    )
-    .reset_index()
-)
-# Calculate the proportion among all professional landlords
-total_prof_hosts = term_summary["n_hosts"].sum()
-total_prof_nights = term_summary["total_nights"].sum()
-
-term_summary["share_of_prof_hosts"] = term_summary["n_hosts"] / total_prof_hosts
-term_summary["share_of_prof_nights"] = term_summary["total_nights"] / total_prof_nights
-
-term_summary
-# Result: Approximately 86% are likely to be dissatisfied.
-
-cost_maylor = pd.DataFrame({
-    "metric": [
-        "affected_hosts_share_of_all_hosts",      # Managed professional landlords / All landlords
-        "long_term_listings_share_within_affected",  # The proportion of long-term rental-oriented users affected
-        "long_term_nights_share_within_affected"
-    ],
-    "value": [
-        share_affected_hosts,
-        float(
-            term_summary.loc[term_summary["term_type"] == "Long-term oriented",
-                             "share_of_prof_hosts"]
-            .fillna(0)
-            .iloc[0] 
-        ),
-        float(
-            term_summary.loc[term_summary["term_type"] == "Long-term oriented",
-                             "share_of_prof_nights"]
-            .fillna(0)
-            .iloc[0]
+    if missing:
+        raise ValueError(
+            "Some boroughs were not assigned to a group (check spelling in your lists):\n"
+            + "\n".join(missing)
         )
-    ]
-})
 
-cost_maylor
-
-# 3.1 The "benefits" of the city = Relief in terms of housing/space structure (as mentioned above) + Involvement of problem landlords and properties in governance
-
-city_benefit = pd.DataFrame({
-    "metric": [
-        # The overall size of the entire house covered by the proposal (housing structural mitigation potential)
-        "share_affected_listings_of_all_listings",
-        "share_affected_listings_of_entire_homes",
-        "share_affected_nights_of_entire_homes",
-        # Inner City Short-Term Rental -—
-        "inner_short_hosts_share_of_prof_hosts",
-        "inner_short_nights_share_of_prof_nights"
-    ],
-    "value": [
-        share_affected_listings_all,
-        share_affected_listings_entire,
-        share_affected_nights_entire,
-        float(
-            host_group_summary
-            .loc[host_group_summary["host_group"] == "Inner-city short-term professional hosts",
-                 "share_of_prof_hosts"]
-            .fillna(0)
-            .iloc[0]
-        ),
-        float(
-            host_group_summary
-            .loc[host_group_summary["host_group"] == "Inner-city short-term professional hosts",
-                 "share_of_prof_nights"]
-            .fillna(0)
-             ),
-    ]
-})
-
-# 3.2 The drawbacks of cities = Potential losses in short-term rental supply/economic vitality (such as tourism), as well as impacts on suburban/long-term rental groups
-
-city_cost = pd.DataFrame({
-    "metric": [
-        # The proposal may reduce the scale of short-term rental supply. Two "share" options are uncertain. Use the first "supply" option.
-        "share_of_city_entire_home_supply_at_risk",     # The proportion of the entire apartment units that have been affected by the strike
-        "share_of_city_entire_home_nights_at_risk",     # The number of nights the properties were affected as a whole accounted for the total number of nights for all properties.
-# Among professional landlords, the part that is more affected resembles "outer-city long-term rental small property owners"
-        "outer_long_hosts_share_of_prof_hosts",
-        "outer_long_nights_share_of_prof_nights"
-    ],
-    "value": [
-        share_affected_listings_entire,
-        share_affected_nights_entire,
-        float(
-            host_group_summary
-            .loc[host_group_summary["host_group"] == "Outer-city long-term professional hosts",
-                 "share_of_prof_hosts"]
-            .fillna(0)
-            .iloc[0]
-        ),
-        float(
-            host_group_summary
-            .loc[host_group_summary["host_group"] == "Outer-city long-term professional hosts",
-                 "share_of_prof_nights"]
-            .fillna(0)
-            .iloc[0]
-        ),
-    ]
-})
-
-city_benefit, city_cost
-
-# The advantages and disadvantages for the residents
-share_long_term_prof_hosts = float(
-    term_summary.loc[term_summary["term_type"] == "Long-term oriented", "share_of_prof_hosts"].fillna(0).iloc[0]
-)
-share_long_term_prof_nights = float(
-    term_summary.loc[term_summary["term_type"] == "Long-term oriented", "share_of_prof_nights"].fillna(0).iloc[0]
-)
-
-share_short_term_prof_hosts = float(
-    term_summary.loc[term_summary["term_type"] == "Short-term oriented", "share_of_prof_hosts"].fillna(0).iloc[0]
-)
-share_short_term_prof_nights = float(
-    term_summary.loc[term_summary["term_type"] == "Short-term oriented", "share_of_prof_nights"].fillna(0).iloc[0]
-)
-outer_long = host_group_summary[
-    host_group_summary["host_group"] == "Outer-city long-term professional hosts"
-]
-
-share_outer_long_hosts = float(
-    (outer_long["n_hosts"] / total_prof_hosts).fillna(0).iloc[0]
-)
-share_outer_long_nights = float(
-    (outer_long["total_nights"] / total_prof_nights).fillna(0).iloc[0]
-)
-# Benefit
-# - The overall scale of the property and the number of short-term rentals -> Residents are less disturbed by short-term visitors / Housing occupancy is reduced
-# - The latter two points: Crackdown on long-term hosts -> Promote fairness
-
-resident_benefit = pd.DataFrame({
-    "metric": [
-        "affected_entire_listings_share_of_all_entire_homes",
-        "affected_entire_nights_share_of_all_entire_nights",
-        "long_term_prof_hosts_share_among_prof_hosts",
-        "long_term_prof_nights_share_among_prof_nights"
-    ],
-    "value": [
-        share_affected_listings_entire,
-        share_affected_nights_entire,
-        share_long_term_prof_hosts,
-        share_long_term_prof_nights
-    ]
-})
-
-# Problem
-# - The first item: Professional landlords are also residents. The profession of landlords directly targeted by the policy, which accounts for the proportion of all Airbnb landlords -> How many "residential landlords" have their income affected
-# - The second and third items: The proportion of long-term rental professional landlords among all landlords -> They are more like local families/small business owners and are subject to a blanket policy
-# - The fourth item: The overall proportion of long-term rental professional landlords among all landlords -> Some of these landlords rent to local residents/are like small wild boars/providing more flexible rental options for local residents
-
-resident_cost = pd.DataFrame({
-    "metric": [
-        "affected_prof_hosts_share_of_all_hosts",
-        "outer_long_term_prof_hosts_share_among_prof_hosts",
-        "outer_long_term_prof_nights_share_among_prof_nights",
-        "long_term_prof_hosts_share_among_prof_hosts"
-    ],
-    "value": [
-        affected_hosts / total_hosts if total_hosts > 0 else np.nan,
-        share_outer_long_hosts,
-        share_outer_long_nights,
-        share_long_term_prof_hosts
-    ]
-})
+    # fixed legend order
+    from pandas.api.types import CategoricalDtype
+    order = CategoricalDtype(
+        categories=[
+            "Inner West",
+            "Inner East",
+            "Outer East & North East",
+            "Outer West & North West",
+            "Outer South",
+        ],
+        ordered=True
+    )
+    gdf["group"] = gdf["group"].astype(order)
+    return gdf
 
 
-resident_benefit, resident_cost
-def tag_metrics(df, stakeholder, side):
-    df = df.copy()
-    df["stakeholder"] = stakeholder   
-    df["side"] = side                 
+# =========================
+# 2) LOAD boundary from GPKG
+# =========================
+def load_msoa_from_gpkg(gpkg_path: str, layer: str | None) -> gpd.GeoDataFrame:
+    if layer is not None:
+        gdf = gpd.read_file(gpkg_path, layer=layer)
+    else:
+        gdf = gpd.read_file(gpkg_path)
+
+    if not isinstance(gdf, gpd.GeoDataFrame) or "geometry" not in gdf.columns:
+        raise TypeError(f"Layer '{layer}' is not a spatial layer (no geometry). Choose a polygon layer.")
+    if gdf.geometry.isna().all():
+        raise ValueError(f"Layer '{layer}' geometry is empty (all NA). Choose a different layer.")
+
+    if gdf.crs is None:
+        gdf = gdf.set_crs("EPSG:27700")
+
+    return gdf.to_crs("EPSG:4326")
+
+
+# =========================
+# 3) AIRBNB LOAD + COMPOSITE
+# =========================
+def load_and_prepare_data(csv_path: str) -> pd.DataFrame:
+    df = pd.read_csv(csv_path)
+
+    if "price" in df.columns:
+        df["price"] = (
+            df["price"].astype(str)
+            .str.replace("$", "", regex=False)
+            .str.replace(",", "", regex=False)
+        )
+        df["price"] = pd.to_numeric(df["price"], errors="coerce")
+    else:
+        df["price"] = np.nan
+
+    for col in ["room_type", "host_listings_count", "maximum_nights", "availability_365",
+                "estimated_revenue_l365d", "estimated_occupancy_l365d"]:
+        if col not in df.columns:
+            df[col] = np.nan
+
+    df["room_type"] = df["room_type"].fillna("Unknown")
+    df["host_listings_count"] = pd.to_numeric(df["host_listings_count"], errors="coerce").fillna(0)
+
+    df = df.dropna(subset=["latitude", "longitude"]).copy()
     return df
 
-combined_metrics = pd.concat([
-    tag_metrics(benefit_mayor,    "Mayor",     "Benefit"),
-    tag_metrics(cost_maylor,       "Mayor",     "Cost"),
-    tag_metrics(city_benefit,     "City",      "Benefit"),
-    tag_metrics(city_cost,        "City",      "Cost"),
-    tag_metrics(resident_benefit, "Residents", "Benefit"),
-    tag_metrics(resident_cost,    "Residents", "Cost"),
-], ignore_index=True)
-#For those names that can be understood and whose meanings are clear
-config = {
-    "Mayor": {
-        "Benefit": {
-            "Policy Coverage Scope": "affected_listings_share_of_all",
-            "Housing supply easing potential": "affected_listings_share_of_entire",
-            "Resource mitigation potential": "affected_nights_share_of_entire_nights",
-        },
-        "Cost": {
-            "The proportion of landlords affected by policy measures of total": "affected_hosts_share_of_all_hosts",
-             "Percentage of affected landlords likely to oppose": "long_term_listings_share_within_affected",
-        },
-    },
-    "City": {
-        "Benefit": {
-            "Housing supply easing potential": "share_affected_listings_of_entire_homes",
-            "Resource mitigation potential": "share_affected_nights_of_entire_homes",
-            #Crackdown on short-term rentals in the inner city - unsure whether to do it or not, can be deleted
-            "Inner-city commercial nights targeted": "inner_short_nights_share_of_prof_nights",
-        },
-        "Cost": {
-            "Outer Long-Term Landlords Affected": "outer_long_hosts_share_of_prof_hosts",
-            "Crackdown on tourism accommodation": "share_of_city_entire_home_supply_at_risk",
-            
-        },
-    },
 
-    "Residents": {
-        "Benefit": {
-            "Reduce disturbance": "affected_entire_listings_share_of_all_entire_homes",
-            "Reduce night-time disturbances": "affected_entire_nights_share_of_all_entire_nights",
-            "Enhancing social equity": "long_term_prof_hosts_share_among_prof_hosts",
-        },
-        "Cost": {
-            "Landlords facing reduced income": "affected_prof_hosts_share_of_all_hosts",
-            "Landlords who shouldn't be penalised": "outer_long_term_prof_hosts_share_among_prof_hosts",
-            "Reducing residents' rental options": "outer_long_term_prof_nights_share_among_prof_nights",
-        },
-    },
-}
-#Matrix table format
-def build_overall_matrix(combined_metrics, config, decimals=3, sep="\n"):
-    stakeholders = list(config.keys())
-    sides = ["Benefit", "Cost"]
+def calculate_composite_index_point(df: pd.DataFrame, weights: Dict[str, float]) -> pd.DataFrame:
+    df["I1_professional"] = (df["host_listings_count"] >= 3).astype(int)
+    df["I2_entire_home"] = (df["room_type"] == "Entire home/apt").astype(int)
 
-    table = pd.DataFrame(index=sides, columns=stakeholders, dtype=object)
+    df["maximum_nights"] = pd.to_numeric(df["maximum_nights"], errors="coerce").fillna(0)
+    df["availability_365"] = pd.to_numeric(df["availability_365"], errors="coerce").fillna(0)
+    df["I3_potential_violation"] = (
+        (df["maximum_nights"] > 90) &
+        (df["availability_365"] >= 180) &
+        (df["I2_entire_home"] == 1)
+    ).astype(int)
 
-    def get_value(stakeholder, side, metric_name):
-        rows = combined_metrics[
-            (combined_metrics["stakeholder"] == stakeholder) &
-            (combined_metrics["side"] == side) &
-            (combined_metrics["metric"] == metric_name)
-        ]
-        if rows.empty:
-            return None
-        return float(rows["value"].iloc[0])
+    df["estimated_revenue_l365d"] = pd.to_numeric(df["estimated_revenue_l365d"], errors="coerce")
+    df["estimated_occupancy_l365d"] = pd.to_numeric(df["estimated_occupancy_l365d"], errors="coerce").fillna(0)
+    df["price"] = pd.to_numeric(df["price"], errors="coerce").fillna(0)
 
-    for stakeholder in stakeholders:
-        for side in sides:
-            metric_map = config[stakeholder].get(side, {})
-            cell_lines = []
-            for label, metric_name in metric_map.items():
-                val = get_value(stakeholder, side, metric_name)
-                if val is None or np.isnan(val):
-                    line = f"{label}: N/A"
-                else:
-                    line = f"{label}: {val:.1%}"
-                cell_lines.append(line)
-            table.loc[side, stakeholder] = sep.join(cell_lines)
+    df["I4_economic_potential"] = df["estimated_revenue_l365d"].fillna(
+        df["price"] * df["estimated_occupancy_l365d"] * 365
+    )
 
-    return table
-overall_matrix = build_overall_matrix(combined_metrics, config)
-pd.set_option('display.max_colwidth', None)   # The content of each cell is not truncated.
-pd.set_option('display.width', 200)          # The maximum number of characters displayed per line can be adjusted as needed.
-pd.set_option('display.max_columns', 10)     # Allow multi-column display
-overall_matrix
+    cols = list(weights.keys())
+    df[cols] = df[cols].fillna(0)
 
-#ols cannot handle this --- it's just an observation value and has no meaning
-#thinking： Do the Airbnb structures (the proportion of professional landlords and density) in different areas of the inner city significantly explain the housing pressure index that residents perceive?
-#We need a DataFrame + variables. The dependent variable is： idx_housing_pressure， and the independent variables are： prof_listing_share， listings_per_km2 (density)
-#Select the dependent variable and independent variables
+    scaler = MinMaxScaler()
+    df[cols] = scaler.fit_transform(df[cols])
 
-import statsmodels.api as sm
-#Dependent variable: Housing stress index (is it available?)
-y_col = "idx_housing_pressure"
-if y_col not in df.columns:
-    raise ValueError(f"msoa_xxxx can not find: {y_col}")
+    df["D_composite_index"] = 0.0
+    for c, w in weights.items():
+        df["D_composite_index"] += df[c] * w
 
-y = df[y_col]
+    return df
 
-candidate_X = [
-    "prof_listing_share",   # The proportion of professional landlords in the London MSOA
-    "listings_per_km2",     # Airbnb density (number of listings / area of MSOA)
-]
 
-# Only retain the columns that actually exist in df, to avoid errors.
-X_cols = [col for col in candidate_X if col in df.columns]
+# =========================
+# 4) PLOT (borough-group zoning)
+# =========================
+def plot_kde_with_context(df_w: pd.DataFrame, boroughs: gpd.GeoDataFrame, output_png: str, label_names: bool = True):
+    df_w = df_w[df_w["D_composite_index"] > 0].dropna(subset=["longitude", "latitude", "D_composite_index"])
+    if df_w.empty:
+        raise ValueError("No valid weighted points for KDE plotting.")
 
-if not X_cols:
-    raise ValueError("can not find")
+    # add groups (strict: no Unclassified)
+    boroughs = add_borough_groups_strict(boroughs, name_col="NAME")
 
-X = df[X_cols]
+    # outline for bbox + border
+    try:
+        outline_geom = boroughs.to_crs("EPSG:27700").geometry.union_all()
+    except Exception:
+        outline_geom = boroughs.to_crs("EPSG:27700").geometry.unary_union
+    outline = gpd.GeoSeries([outline_geom], crs="EPSG:27700").to_crs("EPSG:4326")
 
-# 3）Combine the dependent variable and the independent variable, and delete the rows with missing values.
-reg_df = pd.concat([y, X], axis=1).dropna()
-y_clean = reg_df[y_col]
-X_clean = reg_df[X_cols]
+    fig, ax = plt.subplots(1, 1, figsize=(14, 14))
 
-# 4）Add the intercept term (constant)
-X_clean = sm.add_constant(X_clean)
+    group_colors = {
+        "Inner West": "#B71346",
+        "Inner East": "#ED6D85",
+        "Outer East & North East": "#75C7EB",
+        "Outer West & North West": "#D8EEFA",
+        "Outer South": "#ABDAF2",
+    }
 
-# 5）OLS 
-model = sm.OLS(y_clean, X_clean)
-results = model.fit()
+    # 1) group background fill
+    boroughs.plot(
+        ax=ax,
+        color=boroughs["group"].map(group_colors),
+        alpha=0.85,
+        edgecolor="none"
+    )
 
-print(results.summary())
+    # 2) group boundaries dashed grey
+    boroughs.boundary.plot(
+        ax=ax,
+        color="white",
+        linewidth=1.2,
+       
+        alpha=0.9
+    )
+
+    # 3) KDE
+    sns.kdeplot(
+        x=df_w["longitude"],
+        y=df_w["latitude"],
+        weights=df_w["D_composite_index"],
+        cmap="Oranges",
+        fill=True,
+        alpha=0.55,
+        levels=15,
+        ax=ax
+    )
+
+    # 4) borough boundaries thin (optional)
+    boroughs.plot(ax=ax, facecolor="none", edgecolor="white", linewidth=0.8, alpha=0.9)
+
+    # 5) bold outline
+    outline.plot(ax=ax, facecolor="none", edgecolor="black", linewidth=1.8, alpha=1.0)
+
+    # 6) Borough name labels (optional)
+    if label_names:
+        label_gdf = boroughs.copy()
+        label_gdf["label_point"] = label_gdf.geometry.representative_point()
+        for _, row in label_gdf.iterrows():
+            ax.text(
+                row["label_point"].x,
+                row["label_point"].y,
+                row["NAME"],
+                fontsize=7,
+                ha="center",
+                va="center",
+                color="black",
+                alpha=0.75
+            )
+
+    # legend (ordered)
+    legend_order = [
+        "Inner West",
+        "Inner East",
+        "Outer East & North East",
+        "Outer West & North West",
+        "Outer South",
+    ]
+    handles = [mpatches.Patch(color=group_colors[k], alpha=0.25, label=k) for k in legend_order]
+    ax.legend(handles=handles, loc="lower left", frameon=True)
+
+    # extent
+    minx, miny, maxx, maxy = outline.total_bounds
+    ax.set_xlim(minx, maxx)
+    ax.set_ylim(miny, maxy)
+
+    ax.set_title("Airbnb weighted KDE with borough-based zones", fontsize=14)
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+
+    plt.tight_layout()
+    plt.savefig(output_png, dpi=300)
+    plt.show()
+    print(f"Saved: {output_png}")
+
+
+# =========================
+# 5) MAIN
+# =========================
+def main():
+    print("--- Loading borough boundaries from GeoPackage ---")
+    boundary = load_msoa_from_gpkg(MSOA_GPKG_PATH, MSOA_LAYER)
+
+    print("--- Loading Airbnb data ---")
+    df = load_and_prepare_data(AIRBNB_CSV_PATH)
+
+    print("--- Building composite index ---")
+    df_w = calculate_composite_index_point(df, WEIGHTS)
+
+    print("--- Plotting ---")
+    plot_kde_with_context(df_w, boundary, OUTPUT_PNG_PATH, label_names=True)
+
+    print("--- Done ---")
+
+if __name__ == "__main__":
+    main()
+    
+# =========================
+# 6) BOROUGH LEVEL ANALYSIS ( Practical-07 & Practical-09)
+# =========================
+def analyze_borough_impact(
+    gpkg_path: str,
+    layer: str,
+    csv_path: str,
+    weights: dict
+):
+    print("\n--- 6. Start the analysis of the impact of administrative region levels ---)
+
+    # 1. Loading boundary
+    boundary_wgs84 = load_msoa_from_gpkg(gpkg_path, layer)
+
+    # 2. Load and calculate the composite index
+    df = load_and_prepare_data(csv_path)
+    df_w = calculate_composite_index_point(df, weights)
+
+    df_w = df_w.dropna(subset=["longitude", "latitude", "D_composite_index"])
+    if df_w.empty:
+        print("❌  Error: There is no valid weighted point data, so spatial connection cannot be performed. ")
+        return None
+
+    # 3. Point → GeoDataFrame
+    points_gdf = gpd.GeoDataFrame(
+        df_w,
+        geometry=gpd.points_from_xy(df_w.longitude, df_w.latitude),
+        crs="EPSG:4326"
+    )
+
+    # 4. Spatial connection
+    boundary_bng = boundary_wgs84.to_crs("EPSG:27700")
+    points_bng = points_gdf.to_crs("EPSG:27700")
+
+    joined_gdf = gpd.sjoin(
+        points_bng,
+        boundary_bng[["NAME", "geometry"]],
+        how="inner",
+        predicate="intersects"
+    )
+
+    # 5. Administrative District Aggregation (⚠️ Must be within the function)
+    borough_impact = (
+        joined_gdf
+        .groupby("NAME")
+        .agg(
+            mean_composite=("D_composite_index", "mean"),
+            listing_count=("id", "count")
+        )
+        .sort_values(by="mean_composite", ascending=False)
+    )
+
+    print("\n--- Ranking of Average Impact Index of Administrative Regions (Top 10) ---")
+    print("Measuring the average intensity of commercialization and high risks in each administrative region.") 
+    print(borough_impact.head(10))
+
+    return borough_impact
+
+
+
+# =========================
+# 7) PLOT BAR CHART (combine Practical-10)
+# =========================
+def plot_borough_impact_bar(borough_impact: pd.DataFrame, top_n: int = 10):
+    """Draw a bar chart showing the top-ranking administrative regions in terms of influence."""
+    if borough_impact is None or borough_impact.empty:
+        print("❌ NO rawing result: Administrative region impact data is empty.)
+        return
+
+    top_impact = borough_impact.head(top_n)
+
+    plt.figure(figsize=(10, 6))
+
+    sns.barplot(
+        x="mean_composite",
+        y=top_impact.index,
+        data=top_impact,
+        palette="Reds_d"
+    )
+
+    plt.title(
+        f"Top {top_n} London Boroughs by Mean Composite Airbnb Impact Index",
+        fontsize=14
+    )
+    plt.xlabel("Mean Composite Index ($D_{composite_index}$)")
+    plt.ylabel("Administrative Area (Borough/MSOA)")
+
+    plt.tight_layout()
+    plt.savefig("data_use/borough_impact_bar_chart.png", dpi=300)
+    plt.show()
+
+    print("Saved: data_use/borough_impact_bar_chart.png")
+
+
+
+# =========================
+# 8) UPDATED MAIN FUNCTION
+# =========================
+def main_with_analysis():
+    # Run the original KDE drawing process
+    main() 
+
+    # Run the analysis of the newly added administrative region levels
+    borough_results = analyze_borough_impact(
+        MSOA_GPKG_PATH,
+        MSOA_LAYER,
+        AIRBNB_CSV_PATH,
+        WEIGHTS
+    )
+
+    # Draw a bar chart of the results
+    plot_borough_impact_bar(borough_results, top_n=10)
+
+    # Summary of Results
+    if borough_results is not None:
+        top_borough = borough_results.iloc[0]
+        print(f"\n--- Final summary ---")
+        print(f"The administrative region with the highest average composite index is：{borough_results.index[0]}")
+        print(f"The average index of this area：{top_borough['mean_composite']:.4f}")
+        print(f"The total number of housing units in this area：{top_borough['listing_count']} ")
+        
+# Run the new main function
+if __name__ == "__main__":
+    main_with_analysis()
 
 ```
 
@@ -1290,6 +1155,7 @@ df.head()
 - Operating nights are proxied using availability data.
 - The 90-day threshold is policy-relevant but imperfect.
 - Results describe relative patterns rather than causal effects.
+-The number of affected properties is calculated directly from the listing data using explicit filtering and counting steps implemented in the code. Professional hosts are defined based
 
 
 {{< include _questions.qmd >}}
@@ -1344,6 +1210,7 @@ df.head()
   year         = {2024},
  url= {https://researchbriefings.files.parliament.uk/documents/CBP-8395/CBP-8395.pdf}}
 }
+
 
 
 
