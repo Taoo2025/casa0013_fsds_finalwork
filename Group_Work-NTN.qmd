@@ -717,7 +717,38 @@ df.head()
 ## References
 把自己用到的文献都放进来，注意老师说的参考文献的方式！！！！
 '在 Quarto 中，您需要使用 BibTeX 和 Markdown格式进行引用。“硬编码”的引用将不被接受。'
+@article{wachsmuth2018airbnb,
+  title={Airbnb and the rent gap: Gentrification through the sharing economy},
+  author={Wachsmuth, David and Weisler, Alexander},
+  journal={Environment and planning A: economy and space},
+  volume={50},
+  number={6},
+  pages={1147--1170},
+  year={2018},
+  publisher={SAGE Publications Sage UK: London, England}
+}
 
+@article{gyodi2024spatial,
+  title={The spatial patterns of Airbnb offers, hotels and attractions: are professional hosts taking over cities?},
+  author={Gy{\'o}di, Krist{\'o}f},
+  journal={Current Issues in Tourism},
+  volume={27},
+  number={17},
+  pages={2757--2782},
+  year={2024},
+  publisher={Taylor \& Francis}
+}
+
+@article{barron2021effect,
+  title={The effect of home-sharing on house prices and rents: Evidence from Airbnb},
+  author={Barron, Kyle and Kung, Edward and Proserpio, Davide},
+  journal={Marketing Science},
+  volume={40},
+  number={1},
+  pages={23--47},
+  year={2021},
+  publisher={INFORMS}
+}
 
 
 
