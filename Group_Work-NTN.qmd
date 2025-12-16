@@ -748,7 +748,7 @@ df.head()
   pages={23--47},
   year={2021},
   publisher={INFORMS}
-}
+}  
 
 
 
