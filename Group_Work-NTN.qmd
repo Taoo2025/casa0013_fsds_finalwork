@@ -654,7 +654,7 @@ As a result, the policy debate can move away from the abstract question of wheth
 For the mayor, the key question is therefore not whether Airbnb should be tolerated or banned, but how different forms of short-term rental activity vary by location and operating intensity.
 Uniform regulation, or “one-size-fits-all” restrictions, risk imposing disproportionate governance costs in non-core areas while weakening policy effectiveness in inner-city neighbourhoods where housing commercialisation pressures are most acute. By contrast, a guided approach to governance (being sensitive to spatial variation and differences in operating intensity) can both relieve housing pressures in inner-city areas and preserve the potential positive role of short-term rentals in supporting household resilience and social mobility.
 Reframing Airbnb and its spatial distribution as a process that reveals, rather than simply produces, inequality can therefore support more transparent, targeted, and spatially responsive policymaking. This perspective does not deny the reality or risks of inner-city gentrification. Rather, it emphasises that by making these risks visible, measurable, and geographically specific, data-driven spatial analysis creates political and policy space for the mayor to pursue rational, differentiated action in an otherwise highly contentious housing debate.
-
+  
 
 ```{python}
 # 这里才写 Python
