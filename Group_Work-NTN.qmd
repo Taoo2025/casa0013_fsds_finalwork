@@ -1659,19 +1659,10 @@ Similar concerns have been raised in the UK context. A House of Commons Library 
 In relation to our findings, improved data transparency would directly support the spatial targeting identified through MSOA analysis and host typologies. If boroughs can access information on listing locations, host identities, and operating intensity, enforcement resources could be directed more effectively toward inner-city areas where high-intensity professional activity is concentrated. This would increase the likelihood that regulation achieves its intended housing outcomes and would help ensure that enforcement is perceived as evidence-based and proportionate. 
 
 
-```{python}
-# 这里才写 Python
-import pandas as pd
-import geopandas as gpd
-
-df = pd.read_csv("data/listings.csv")
-df.head()
-```
 
 ## Overall Assessment
 
 ## Transparency and Limitations
-（这些是Q2/4的，自己加自己负责的部分的Transparency and Limitations）
 - This analysis relies on scraped platform data and operational definitions of professional landlords, which may under- or over-estimate true levels of commercial activity. Spatial patterns should therefore be interpreted as indicative rather than definitive.
 - Operating nights are proxied using availability data.
 - The 90-day threshold is policy-relevant but imperfect.
@@ -1682,55 +1673,7 @@ df.head()
 {{< include _questions.qmd >}}
 
 ## References
-把自己用到的文献都放进来，注意老师说的参考文献的方式！！！！
-'在 Quarto 中，您需要使用 BibTeX 和 Markdown格式进行引用。“硬编码”的引用将不被接受。'
-@article{wachsmuth2018airbnb,
-  title={Airbnb and the rent gap: Gentrification through the sharing economy},
-  author={Wachsmuth, David and Weisler, Alexander},
-  journal={Environment and planning A: economy and space},
-  volume={50},
-  number={6},
-  pages={1147--1170},
-  year={2018},
-  publisher={SAGE Publications Sage UK: London, England}
-}
 
-@article{gyodi2024spatial,
-  title={The spatial patterns of Airbnb offers, hotels and attractions: are professional hosts taking over cities?},
-  author={Gy{\'o}di, Krist{\'o}f},
-  journal={Current Issues in Tourism},
-  volume={27},
-  number={17},
-  pages={2757--2782},
-  year={2024},
-  publisher={Taylor \& Francis}
-}
-
-@article{barron2021effect,
-  title={The effect of home-sharing on house prices and rents: Evidence from Airbnb},
-  author={Barron, Kyle and Kung, Edward and Proserpio, Davide},
-  journal={Marketing Science},
-  volume={40},
-  number={1},
-  pages={23--47},
-  year={2021},
-  publisher={INFORMS}
-}  
-
-@misc{nber2024str,
-  author       = {{National Bureau of Economic Research}},
-  title        = {Tracking the Impact of Short-Term Rental Regulation},
-  year         = {2024},
-  url= {https://www.nber.org/digest/202409/tracking-impact-short-term-rental-regulation}},
-  note         = {Accessed: 2025-12-16}
-}
-
-@misc{ukparl2024str,
-  author       = {{House of Commons Library}},
-  title        = {The growth of short-term lettings in England},
-  year         = {2024},
- url= {https://researchbriefings.files.parliament.uk/documents/CBP-8395/CBP-8395.pdf}}
-}
 
 
 
